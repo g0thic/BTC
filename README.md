@@ -1,2 +1,2 @@
-# BITCOIN [![CodeFactor](https://www.codefactor.io/repository/github/g0thic/btc/badge)](https://www.codefactor.io/repository/github/g0thic/btc)
-# #$%^&*(234567890
+[![CodeFactor](https://www.codefactor.io/repository/github/g0thic/btc/badge)](https://www.codefactor.io/repository/github/g0thic/btc)
+
