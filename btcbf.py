@@ -8,19 +8,19 @@ from multiprocessing.pool import ThreadPool
 def connect(address):
     try:
         return requests.get("https://blockchain.info/q/getreceivedbyaddress/"+address+"/").text
-    except:
+    except BaseException:
         raise Exception("con error")
     
 def fillAddList():
-    l = list()
+    temp_list = list()
     s = address_factory.AddressFact()
     ss = ["Lib1","Lib2","Lib3","Lib4"]
     for sss in ss:
         x=s.createAdress(sss).getAdrs()
         for item in x:
-            l.append(item)
+            temp_list.append(item)
     
-    return l
+    return temp_list
 
 def apped_to_file(ll,index):
     with open("foundkey.txt","a") as f:
