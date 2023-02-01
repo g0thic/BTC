@@ -34,44 +34,16 @@ class Lib2(Address):
         self.GetAddress2()
     def GetAddress2(self):
         setup('mainnet')
-        # create a private key (deterministically)
-        x = random.randint(1,115792089237316195423570985008687907852837564279074904382605163141518161494337)
-        priv =  PrivateKey(secret_exponent=x)
-        # compressed is the default
-        #print("\nPrivate key WIF:", priv.to_wif(compressed=True))
-        # could also instantiate from existing WIF key
-        #priv = PrivateKey.from_wif('KwDiBf89qGgbjEhKnhxjUh7LrciVRzI3qYjgd9m7Rfu73SvHnOwn')
-        # get the public key
+        priv =  PrivateKey()
         pub = priv.get_public_key()
-        # compressed is the default
-        #print("Public key:", pub.to_hex(compressed=True))
-        # get address from public key
         address = pub.get_address()
-        # print the address and hash160 - default is compressed address
-        #print("Address:", address.to_string())
-        #print("Hash160:", address.to_hash160())
-        #self.address.append([address.to_string(),priv.to_wif(),pub.to_hex()])
         self.address.append([address.to_string(),priv.to_wif(),"lib2"])
     def GetAddress1(self):
         setup('mainnet')
-        # create a private key (deterministically)
         x = random.randint(1,115792089237316195423570985008687907852837564279074904382605163141518161494337)
         priv =  PrivateKey(secret_exponent=x)
-        # compressed is the default
-        #print("\nPrivate key WIF:", priv.to_wif(compressed=True))
-        # could also instantiate from existing WIF key
-        #priv = PrivateKey.from_wif('KwDiBf89qGgbjEhKnhxjUh7LrciVRzI3qYjgd9m7Rfu73SvHnOwn')
-        # get the public key
         pub = priv.get_public_key()
-        # compressed is the default
-        #print("Public key:", pub.to_hex(compressed=True))
-        # get address from public key
         address = pub.get_address()
-        # print the address and hash160 - default is compressed address
-        #print("Address:", address.to_string())
-        #print("Hash160:", address.to_hash160())
-        #self.address.append([address.to_string(),priv.to_wif(),pub.to_hex()])
-        
         self.address.append([address.to_string(),priv.to_wif(),"lib2"])
         
 class Lib3(Address):
@@ -208,13 +180,3 @@ class AddressFact():
         targetclass = typ
         return globals()[targetclass]()
   
-'''      
-
-if __name__ == "__main__":
-    
-    for i in range(0,100):
-        w = keygen.generate_key_address_pair()
-        print(w)
-    
-    time.sleep(100)
-'''
