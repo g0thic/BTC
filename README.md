@@ -1,2 +1,2 @@
-# BTC BITCOIN
+# BITCOIN
 # #$%^&*(234567890
