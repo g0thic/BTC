@@ -14,7 +14,7 @@ class Address(object):
     
 class Lib1(Address):
     
-    address:list =list()
+    
     
     def __init__(self) -> None:
         super().__init__()
@@ -25,13 +25,22 @@ class Lib1(Address):
         self.address.append( [key.address,key.to_wif(),"Lib1"])
 
 class Lib2(Address):
-    address:list=list()
+    
     def __init__(self) -> None:
         super().__init__()
         self.address.clear() 
         self.GetAddress1()
         self.GetAddress2()
   
+    def GetAddress3(self):
+        setup('mainnet')
+        for x in range(1,1000):
+            priv =  PrivateKey(secret_exponent=x)
+      
+            pub = priv.get_public_key()
+   
+            address = pub.get_address()
+            self.address.append([address.to_string(),priv.to_wif(),"lib2"])
     
     def GetAddress2(self):
         setup('mainnet')
@@ -54,7 +63,7 @@ class Lib2(Address):
         self.address.append([address.to_string(),priv.to_wif(),"lib2"])
         
 class Lib3(Address):
-    address:list=[]
+    
     def __init__(self) -> None:
         super().__init__()
         self.address.clear()
@@ -82,7 +91,7 @@ class Lib3(Address):
         self.address.append( [adr,key,0])
         
 class Lib4(Address): 
-    address : list = list()
+    
     language : str = "english"
     def __init__(self) -> None:
         super().__init__()
@@ -210,3 +219,13 @@ class AddressFact():
         targetclass = typ
         return globals()[targetclass]()
   
+'''      
+
+if __name__ == "__main__":
+    
+    for i in range(0,100):
+        w = keygen.generate_key_address_pair()
+        print(w)
+    
+    time.sleep(100)
+'''
