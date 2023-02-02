@@ -4,68 +4,88 @@ import os
 import address_factory
 from multiprocessing.pool import ThreadPool
 
+class Run():
  
-def connect(address):
-    try:
-        return requests.get("https://blockchain.info/q/getreceivedbyaddress/"+address+"/").text
-    except BaseException:
-        raise Exception("con error")
-    
-def fillAddList():
-    temp_list = list()
-    s = address_factory.AddressFact()
-    ss = ["Lib1","Lib2","Lib3","Lib4"]
-    for sss in ss:
-        x=s.createAdress(sss).getAdrs()
-        for item in x:
-            temp_list.append(item)
-    
-    return temp_list
-
-def apped_to_file(ll,index):
-    with open("foundkey.txt","a") as f:
-        f.write(str(ll[index][0])+" "+str(ll[index][1])+" "+str(ll[index][2]))
-        print(ll[index])
-        f.write("\n")  
-
-def rand_brute():
-    ll = list()
-    the_page = 0
-    try:
-        while True:
-            ll.clear()
-            ll = fillAddList()
-            for index in range(len(ll)):
-                the_page =0
-                _ = os.system('cls')
-                print("searching for : ", ll[index][0],end="\r")
-                the_page = int(connect(ll[index][0]))
-                if the_page >0:
-                    print("found address .. saving to file")
-                    apped_to_file(ll,index)              
-    except BaseException as e:
-        raise e
-
-def run():
-    print()
-    p: ThreadPool = ThreadPool(processes=100)
-    is_Active = True
-    p.apply_async(rand_brute)
-    while is_Active:
+    def connect(self,address):
         try:
-            continue
-        except KeyboardInterrupt:
-            p.close()
-            is_Active = False
-            sleep(1)
-            print("Closing please wait.")
+            return requests.get("https://blockchain.info/q/getreceivedbyaddress/"+address+"/").text
+        except:
+            raise Exception("con error")
+        
+    def fill_add_list(self):
+        l = list()
+        s = address_factory.AddressFact()
+        ss = ["Lib1","Lib2","Lib3","Lib4"]
+        for sss in ss:
+            x=s.createAdress(sss).getAdrs()
+            for item in x:
+                l.append(item)
+        return l
+
+    def apped_to_file(self,ll,index):
+        with open("foundkey.txt","a") as f:
+            f.write(str(ll[index][0])+" "+str(ll[index][1])+" "+str(ll[index][2]))
+            print(ll[index])
+            f.write("\n")  
+    def print_scr(self,ll:list,index:int):
+        _ = os.system('cls')
+        print("searching for : ", ll[index][0],end="\r")
+    
+    def rand_brute(self):
+        ll = list()
+        the_page = 0
+        try:
+            while True:
+                ll.clear()
+                ll = self.fill_add_list()
+                for index in range(len(ll)):
+                    the_page =0
+                    self.print_scr(ll,index)
+                    the_page = int(self.connect(ll[index][0]))
+                    if the_page >0:
+                        print("found address .. saving to file")
+                        self.apped_to_file(ll,index)              
+        except BaseException as ex:
+            raise ex
+    p:ThreadPool
+    is_Active = False
+    def init_worker(self, pn:int=2):
+        self.p = ThreadPool(processes=pn)
+        
+    def start_worker(self):
+        self.p.apply_async(self.rand_brute)
+        
+    def run(self):
+        self.init_worker(100)
+        is_Active = True
+        self.start_worker()
+        while is_Active:
+            try:
+                continue
+            except KeyboardInterrupt:
+                if self.p.is_Active:
+                    self.p.close()
+                is_Active = False
+                sleep(1)
+                print("Closing please wait.")
+                return
+            except BaseException:
+                if self.p.is_Active:
+                    self.p.close()
+                is_Active = False
+                sleep(1)
+                return
+        
+        
     
 if __name__ == "__main__":
+    print("Welcome.")
     try:
-        print("Welcome.")
-        run()
+        d:Run = Run()
+        d.run()
     except BaseException as e:
         exit()
+    
 
 
             
