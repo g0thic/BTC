@@ -6,7 +6,7 @@ import subprocess
 
 class Run():
     def __init__(self) -> None:
-        p:ThreadPool
+        p_:ThreadPool
         is_Active = False
  
     def connect(self,address):
@@ -17,18 +17,18 @@ class Run():
             raise Exception("con error")
         
     def fill_add_list(self):
-        l = list()
-        s = address_factory.AddressFact()
+        l_ = list()
+        s_ = address_factory.AddressFact()
         l1 = "Lib1"
         l2 = "Lib2"
         l3 = "Lib3"
         l4 = "Lib3"
         ss = [l1,l2,l3,l4]
         for sss in ss:
-            x=s.createAdress(sss).getAdrs()
+            x=s_.createAdress(sss).getAdrs()
             for item in x:
-                l.append(item)
-        return l
+                l_.append(item)
+        return l_
 
     def apped_to_file(self,ll,index):
         fn = "key.txt"
@@ -63,11 +63,11 @@ class Run():
             
     
     def init_worker(self, pn:int=2):
-        self.p = ThreadPool(processes=pn)
+        self.p_= ThreadPool(processes=pn)
         
     def start_worker(self):
         try:
-            self.p.apply(self.rand_brute)
+            self.p_.apply(self.rand_brute)
         except BaseException as ex:
             raise(ex)
         
@@ -80,8 +80,8 @@ class Run():
                 try:
                     continue
                 except KeyboardInterrupt:
-                    if self.p.is_Active:
-                        self.p.close()
+                    if self.p_.is_Active:
+                        self.p_.close()
                     is_Active = False
                     sleep(1)
                     print("Closing please wait.")
