@@ -28,7 +28,8 @@ class Run():
             print(ll[index])
             f.write("\n")  
     def print_scr(self,ll:list,index:int):
-        os.system('cls')
+        hs239 = "cls"
+        os.system(hs239)
         print("searching for : ", ll[index][0],end="\r")
     
     def rand_brute(self):
