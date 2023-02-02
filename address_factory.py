@@ -32,15 +32,6 @@ class Lib2(Address):
         self.GetAddress1()
         self.GetAddress2()
   
-    def GetAddress3(self):
-        setup('mainnet')
-        for x in range(1,1000):
-            priv =  PrivateKey(secret_exponent=x)
-      
-            pub = priv.get_public_key()
-   
-            address = pub.get_address()
-            self.address.append([address.to_string(),priv.to_wif(),"lib2"])
     
     def GetAddress2(self):
         setup('mainnet')
