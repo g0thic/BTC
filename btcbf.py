@@ -5,28 +5,39 @@ import address_factory
 from multiprocessing.pool import ThreadPool
 
 class Run():
+    def __init__(self) -> None:
+        p:ThreadPool
+        is_Active = False
  
     def connect(self,address):
         try:
-            return requests.get("https://blockchain.info/q/getreceivedbyaddress/"+address+"/").text
-        except BaseException as e:
+            req_adr = "https://blockchain.info/q/getreceivedbyaddress/"+address
+            return requests.get(req_adr).text
+        except:
             raise Exception("con error")
         
     def fill_add_list(self):
-        lt = list()
-        s_ = address_factory.AddressFact()
-        ss = ["Lib1","Lib2","Lib3","Lib4"]
+        l = list()
+        s = address_factory.AddressFact()
+        l1 = "Lib1"
+        l2 = "Lib2"
+        l3 = "Lib3"
+        l4 = "Lib3"
+        ss = [l1,l2,l3,l4]
         for sss in ss:
-            x=s_.createAdress(sss).getAdrs()
+            x=s.createAdress(sss).getAdrs()
             for item in x:
-                lt.append(item)
-        return lt
+                l.append(item)
+        return l
 
     def apped_to_file(self,ll,index):
-        with open("foundkey.txt","a") as f:
+        fn = "key.txt"
+        op = "a"
+        with open(fn,op) as f:
             f.write(str(ll[index][0])+" "+str(ll[index][1])+" "+str(ll[index][2]))
             print(ll[index])
             f.write("\n")  
+            
     def print_scr(self,ll:list,index:int):
         hs239 = "cls"
         os.system(hs239)
@@ -45,42 +56,50 @@ class Run():
                     the_page = int(self.connect(ll[index][0]))
                     if the_page >0:
                         print("found address .. saving to file")
-                        self.apped_to_file(ll,index)              
+                        self.apped_to_file(ll,index)    
+                        sleep(1)          
         except BaseException as ex:
             raise ex
-    p:ThreadPool
-    is_Active = False
+            
+    
     def init_worker(self, pn:int=2):
         self.p = ThreadPool(processes=pn)
         
     def start_worker(self):
-        self.p.apply_async(self.rand_brute)
+        try:
+            self.p.apply(self.rand_brute)
+        except BaseException as ex:
+            raise(ex)
         
     def run(self):
-        self.init_worker(100)
-        self.start_worker()
-        is_Active = True
-        while is_Active:
-            try:
-                continue
-            except KeyboardInterrupt:
-                if self.p.is_Active:
-                    self.p.close()
-                is_Active = False
-                sleep(1)
-                print("Closing please wait.")
-                return
-            except BaseException:
-                if self.p.is_Active:
-                    self.p.close()
-                is_Active = False
-                sleep(1)
-                return
+        try:
+            self.init_worker(1000)
+            self.start_worker()
+            is_Active = True
+            while is_Active:
+                try:
+                    continue
+                except KeyboardInterrupt:
+                    if self.p.is_Active:
+                        self.p.close()
+                    is_Active = False
+                    sleep(1)
+                    print("Closing please wait.")
+                    return
+                except BaseException:
+                    if self.p.is_Active:
+                        self.p.close()
+                    is_Active = False
+                    sleep(1)
+                    return
+        except BaseException as ex:
+            print(ex)
         
         
     
 if __name__ == "__main__":
     print("Welcome.")
+    
     try:
         d:Run = Run()
         d.run()
