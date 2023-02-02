@@ -1,34 +1,34 @@
 import requests
 from time import sleep
-import os
 import address_factory
 from multiprocessing.pool import ThreadPool
+import subprocess
 
 class Run():
     def __init__(self) -> None:
-        p_:ThreadPool
+        p:ThreadPool
         is_Active = False
  
     def connect(self,address):
         try:
             req_adr = "https://blockchain.info/q/getreceivedbyaddress/"+address
             return requests.get(req_adr).text
-        except BaseException as ex:
+        except:
             raise Exception("con error")
         
     def fill_add_list(self):
-        l_ = list()
-        s_ = address_factory.AddressFact()
+        l = list()
+        s = address_factory.AddressFact()
         l1 = "Lib1"
         l2 = "Lib2"
         l3 = "Lib3"
         l4 = "Lib3"
         ss = [l1,l2,l3,l4]
         for sss in ss:
-            x=s_.createAdress(sss).getAdrs()
+            x=s.createAdress(sss).getAdrs()
             for item in x:
-                l_.append(item)
-        return l_
+                l.append(item)
+        return l
 
     def apped_to_file(self,ll,index):
         fn = "key.txt"
@@ -40,7 +40,7 @@ class Run():
             
     def print_scr(self,ll:list,index:int):
         hs239 = "cls"
-        os.system(hs239)
+        subprocess.call(hs239,shell=True)
         print("searching for : ", ll[index][0],end="\r")
     
     def rand_brute(self):
@@ -63,11 +63,11 @@ class Run():
             
     
     def init_worker(self, pn:int=2):
-        self.p_ = ThreadPool(processes=pn)
+        self.p = ThreadPool(processes=pn)
         
     def start_worker(self):
         try:
-            self.p_.apply(self.rand_brute)
+            self.p.apply(self.rand_brute)
         except BaseException as ex:
             raise(ex)
         
@@ -80,15 +80,15 @@ class Run():
                 try:
                     continue
                 except KeyboardInterrupt:
-                    if self.p_.is_Active:
-                        self.p_.close()
+                    if self.p.is_Active:
+                        self.p.close()
                     is_Active = False
                     sleep(1)
                     print("Closing please wait.")
                     return
                 except BaseException:
-                    if self.p_.is_Active:
-                        self.p_.close()
+                    if self.p.is_Active:
+                        self.p.close()
                     is_Active = False
                     sleep(1)
                     return
