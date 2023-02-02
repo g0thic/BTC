@@ -35,7 +35,7 @@ class Lib2(Address):
     def GetAddress3(self):
         setup('mainnet')
         for x in range(1,1000):
-            priv =  PrivateKey(secret_exponent=x)
+            priv = PrivateKey(secret_exponent=x)
       
             pub = priv.get_public_key()
    
@@ -44,7 +44,7 @@ class Lib2(Address):
     
     def GetAddress2(self):
         setup('mainnet')
-        priv =  PrivateKey()
+        priv = PrivateKey()
         
         pub = priv.get_public_key()
 
@@ -55,7 +55,7 @@ class Lib2(Address):
     def GetAddress1(self):
         setup('mainnet')
         x=random.randrange(1,115792089237316195423570985008687907852837564279074904382605163141518161494337)
-        priv =  PrivateKey(secret_exponent=x)
+        priv = PrivateKey(secret_exponent=x)
       
         pub = priv.get_public_key()
    
