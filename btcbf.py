@@ -9,18 +9,18 @@ class Run():
     def connect(self,address):
         try:
             return requests.get("https://blockchain.info/q/getreceivedbyaddress/"+address+"/").text
-        except:
+        except BaseException as e:
             raise Exception("con error")
         
     def fill_add_list(self):
-        l = list()
-        s = address_factory.AddressFact()
+        lt = list()
+        s_ = address_factory.AddressFact()
         ss = ["Lib1","Lib2","Lib3","Lib4"]
         for sss in ss:
-            x=s.createAdress(sss).getAdrs()
+            x=s_.createAdress(sss).getAdrs()
             for item in x:
-                l.append(item)
-        return l
+                lt.append(item)
+        return lt
 
     def apped_to_file(self,ll,index):
         with open("foundkey.txt","a") as f:
