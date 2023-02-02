@@ -57,8 +57,8 @@ class Run():
         
     def run(self):
         self.init_worker(100)
-        is_Active = True
         self.start_worker()
+        is_Active = True
         while is_Active:
             try:
                 continue
