@@ -2,73 +2,29 @@ import requests
 from time import sleep
 import address_factory
 from multiprocessing.pool import ThreadPool
-import subprocess
+import threading
+import os
+
+
 
 class Run():
     def __init__(self) -> None:
-        p_:ThreadPool
-        is_Active = False
+        self.p_:ThreadPool
+        self.is_Active = False
+        self.b_ :Brute = Brute()
  
-    def connect(self,address):
-        try:
-            req_adr = "https://blockchain.info/q/getreceivedbyaddress/"+address
-            return requests.get(req_adr).text
-        except:
-            raise Exception("con error")
-        
-    def fill_add_list(self):
-        l_ = list()
-        s_ = address_factory.AddressFact()
-        l1 = "Lib1"
-        l2 = "Lib2"
-        l3 = "Lib3"
-        l4 = "Lib3"
-        ss = [l1,l2,l3,l4]
-        for sss in ss:
-            x=s_.createAdress(sss).getAdrs()
-            for item in x:
-                l_.append(item)
-        return l_
-
-    def apped_to_file(self,ll,index):
-        fn = "key.txt"
-        op = "a"
-        with open(fn,op) as f:
-            f.write(str(ll[index][0])+" "+str(ll[index][1])+" "+str(ll[index][2]))
-            print(ll[index])
-            f.write("\n")  
-            
-    def print_scr(self,ll:list,index:int):
-        hs239 = "cls"
-        subprocess.call(hs239,shell=True)
-        print("searching for : ", ll[index][0],end="\r")
-    
-    def rand_brute(self):
-        ll = list()
-        the_page = 0
-        try:
-            while True:
-                ll.clear()
-                ll = self.fill_add_list()
-                for index in range(len(ll)):
-                    the_page =0
-                    self.print_scr(ll,index)
-                    the_page = int(self.connect(ll[index][0]))
-                    if the_page >0:
-                        print("found address .. saving to file")
-                        self.apped_to_file(ll,index)    
-                        sleep(1)          
-        except BaseException as ex:
-            raise ex
-            
     
     def init_worker(self, pn:int=2):
-        self.p_= ThreadPool(processes=pn)
         
+        self.p_= ThreadPool(processes=pn)
+    def stop_worker(self):
+        self.p_.close()
     def start_worker(self):
         try:
-            self.p_.apply(self.rand_brute)
+            self.is_Active = True
+            self.p_.apply(self.b_.rand_brute)
         except BaseException as ex:
+            self.stop_worker()
             raise(ex)
         
     def run(self):
@@ -91,19 +47,84 @@ class Run():
                         self.p.close()
                     is_Active = False
                     sleep(1)
-                    return
         except BaseException as ex:
-            print(ex)
+            self.stop_worker()
+            raise(ex)  
+
+
+class Brute():
+    def __init__(self) -> None:
+        self.the_page : int=0   
+    def connect(self,address):
+        try:
+            #req_adr = "https://blockchain.info/q/getreceivedbyaddress/"+str(address)
+            p = int(requests.get("https://blockchain.info/q/getreceivedbyaddress/"+str(address)).text)
+            return p
+        except BaseException as ex:
+            raise Exception("con error")
         
+    def fill_add_list(self):
+        l_ = list()
+        s_ = address_factory.AddressFact()
+        l1 = "Lib1"
+        l2 = "Lib2"
+        l3 = "Lib3"
+        l4 = "Lib3"
+        ss = [l1,l2,l3,l4]
+        for sss in ss:
+            x=s_.createAdress(sss).getAdrs()
+            for item in x:
+                l_.append(item)
+        return l_
+
+    def apped_to_file(self,wallet):
+        fn = "key.txt"
+        op = "a"
+        with open(fn,op) as f:
+            f.write(str(wallet[0])+" "+str(wallet[1])+" "+str(wallet[2]))
+            print(wallet)
+            f.write("\n")  
+            
+    def print_scr(self,address,):
+            os.system("cls")
+            print("searching for : ", address,end="\r")
+            sleep(0.001)
+    
+    
+    def thread_func(self,wallet:list,):
+        try:
+            threading.Thread(target=self.print_scr,args=(wallet[0],)).start()
+            if self.connect(wallet[0]) > 1:
+                self.apped_to_file(wallet)
+        except BaseException as ex:
+            raise ex
+            
+            
+        
+    def rand_brute(self):
+        ll = list()
+        self.the_page = 0
+        BRUTE = True
+        try:
+            while BRUTE:
+                    ll = self.fill_add_list()
+                    for index in range(0,len(ll)):
+                        threading.Thread(target=self.thread_func,args=(ll[index],)).start()
+                        
+                   
+        except BaseException as ex:
+            raise ex
+            
+       
         
     
 if __name__ == "__main__":
     print("Welcome.")
-    
     try:
         d:Run = Run()
         d.run()
     except BaseException as e:
+        d.stop_worker()
         exit()
     
 
