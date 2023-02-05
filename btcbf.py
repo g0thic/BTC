@@ -18,7 +18,6 @@ def connect(address):
 def prnt_scr(txt):
     os.system("cls")
     print(txt)
-    #print("searching for : ", txt,"\n")
 
     
 class Brute():
