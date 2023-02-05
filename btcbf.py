@@ -18,6 +18,7 @@ def connect(address):
 def prnt_scr(txt):
     os.system("cls")
     print(txt)
+    #print("searching for : ", txt,"\n")
 
     
 class Brute():
@@ -59,10 +60,7 @@ class Brute():
             self.exec = ex
             self.ERROR = True
             
-            
-    @property
-    def HAS_ERROR(self):
-        return self.ERROR    
+               
         
     def rand_brute(self):
         ll = list()
@@ -88,7 +86,6 @@ class Brute():
 class Run():
     def __init__(self) -> None:
         self.p_:ThreadPool
-        self.ERROR_COUNTER : int = 0
     
     def init_worker(self, pn:int=2):
         self.p_= ThreadPool(processes=pn)
