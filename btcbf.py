@@ -98,11 +98,11 @@ class Run():
         Brute().rand_brute()
         
     def start_worker(self):
-            self.p_.apply(self.worker_function)
+        self.p_.apply(self.worker_function)
             
     def run(self):
-            self.init_worker()
-            self.start_worker()
+        self.init_worker()
+        self.start_worker()
 
 if __name__ == "__main__":
     print("Welcome.")
