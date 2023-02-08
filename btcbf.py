@@ -18,6 +18,7 @@ def connect(address):
 def prnt_scr(txt):
     os.system("cls")
     print(txt)
+    
 
     
 class Brute():
@@ -49,18 +50,19 @@ class Brute():
             
     def thread_func(self,wallet:list,):
         try:
-            t1 = threading.Thread(target=prnt_scr,args=(wallet[0],))
+            str_ = "searching for: "+str(wallet[0])
+            t1 = threading.Thread(target=prnt_scr,args=(str_,))
             t1.start()
             result = self.connect(wallet[0])
             if result > 0:
                 self.append_to_file(wallet)
         except BaseException as ex:
-            t1.join()
             self.exec = ex
             self.ERROR = True
             
                
-        
+    
+    
     def rand_brute(self):
         ll = list()
         self.the_page = 0
@@ -71,6 +73,7 @@ class Brute():
                     break
                 ll = self.fill_add_list()
                 for index in range(0,len(ll)):
+                    sleep(0.1)
                     t_ = threading.Thread(target=self.thread_func,args=(ll[index],))
                     t_.start()
                     if self.ERROR: 
@@ -98,7 +101,7 @@ class Run():
             self.p_.apply(self.worker_function)
             
     def run(self):
-            self.init_worker(1000)
+            self.init_worker()
             self.start_worker()
 
 if __name__ == "__main__":
@@ -106,9 +109,6 @@ if __name__ == "__main__":
     try:
         d:Run = Run()
         d.run()
-        
-       
-        
     except BaseException as e:
         print(e)
         sys.exit()
