@@ -28,8 +28,6 @@ class StaticMethods():
     @staticmethod
     def connect(address):
         try:
-            #proxy_dic = StaticClass().fill_proxy_dic()
-            #StaticClass().fill_proxy_dic()
             c = requests.get("https://blockchain.info/q/getreceivedbyaddress/"+str(address))
             return int(c.text)
         except BaseException as bx:
