@@ -8,7 +8,6 @@ from mnemonic import Mnemonic
 from hdwallet.utils import is_mnemonic
 from hdwallet import *
 import bitcoinlib.wallets
-from bitcoinlib.wallets import Wallet as BITCOINLIBWALLET
 import bitcoinlib.keys as Keys
 
 
@@ -32,7 +31,7 @@ class Lib1(Address):
 
 
 class Lib2(Address):
-
+    MAX = 115792089237316195423570985008687907852837564279074904382605163141518161494337
     def __init__(self) -> None:
         super().__init__()
         self.address.clear()
@@ -44,8 +43,7 @@ class Lib2(Address):
 
         for x in range(5):
             setup('mainnet')
-            xx = random.randint(
-                1, 115792089237316195423570985008687907852837564279074904382605163141518161494337)
+            xx = random.randint(1,self.MAX)
             priv = PrivateKey(secret_exponent=xx)
             pub = priv.get_public_key()
             address = pub.get_address()
@@ -66,7 +64,7 @@ class Lib2(Address):
     def GetAddress1(self):
         setup('mainnet')
         x = random.randrange(
-            1, 115792089237316195423570985008687907852837564279074904382605163141518161494337)
+            1, self.MAX)
         priv = PrivateKey(secret_exponent=x)
 
         pub = priv.get_public_key()
@@ -275,14 +273,16 @@ class Lib5(Address):
         self.get_adr1()
         self.get_adr2()
         self.get_adr3()
-        self.get_adr4()
+        #self.get_adr4()
         self.get_adr5()
+        self.get_adr6()
 
     def get_adr1(self):
         name = random.choice(string.ascii_letters)
         bitcoinlib.wallets.wallet_delete_if_exists(name)
         p = Mnemonic(language=self.LANGUAGE).generate()
-        w = BITCOINLIBWALLET.create(name, keys=p, network=self.BITCOIN)
+        
+        w = bitcoinlib.wallets.wallet_create_or_open(name, keys=p, network=self.BITCOIN)
         key_ = w.get_key()
         wif = key_.wif
         address = key_.address
@@ -292,7 +292,7 @@ class Lib5(Address):
         name = random.choice(string.ascii_letters)
         bitcoinlib.wallets.wallet_delete_if_exists(name)
         p = Mnemonic(language=self.LANGUAGE).generate()
-        w = BITCOINLIBWALLET.create(
+        w = bitcoinlib.wallets.wallet_create_or_open(
             name, keys=p, network=self.BITCOIN, witness_type=self.SEGWIT)
         key_ = w.get_key()
         wif = key_.wif
@@ -303,7 +303,8 @@ class Lib5(Address):
         name = random.choice(string.ascii_letters)
         bitcoinlib.wallets.wallet_delete_if_exists(name)
         p = Mnemonic(language=self.LANGUAGE).generate()
-        w = BITCOINLIBWALLET.create(
+        
+        w = bitcoinlib.wallets.wallet_create_or_open(
             name, keys=p, network=self.BITCOIN, witness_type=self.P2SH_SEGWIT)
         key_ = w.get_key()
         wif = key_.wif
@@ -313,21 +314,22 @@ class Lib5(Address):
     def get_adr4(self):
         name = random.choice(string.ascii_letters)
         bitcoinlib.wallets.wallet_delete_if_exists(name)
-        w = BITCOINLIBWALLET.create(
+        w = bitcoinlib.wallets.wallet_create_or_open(
             name, keys=[Keys.HDKey(), Keys.HDKey().public()], network=self.BITCOIN)
         key_ = w.get_key()
-        wif = key_.wif
-        address = key_.address
-        self.address.append([address, wif, "Lib5"])
+        self.address.append([key_.address, key_.wif, "Lib5"])
 
     def get_adr5(self):
         name = random.choice(string.ascii_letters)
         bitcoinlib.wallets.wallet_delete_if_exists(name)
-        w = BITCOINLIBWALLET.create(name, network=self.BITCOIN)
+        w = bitcoinlib.wallets.wallet_create_or_open(name, network=self.BITCOIN)
         key_ = w.get_key()
-        wif = key_.wif
-        address = key_.address
-        self.address.append([address, wif, "Lib5"])
+        self.address.append([key_.address, key_.wif, "Lib5"])
+
+    def get_adr6(self):
+        k = Keys.HDKey(multisig=True)
+        self.address.append([k.address(),k.private_byte,k.private_hex])
+        
 
 
 class AddressFact():
@@ -336,4 +338,12 @@ class AddressFact():
         return globals()[targetclass]()
 
 
-
+if __name__ == "__main__":
+    
+    k = Keys.HDKey(multisig=True)
+    print(k.private_hex)
+    
+    print(k.address())
+    print(k.private_byte)
+   
+    
