@@ -90,7 +90,7 @@ class Brute():
     
     def thread_func_proxy(self,wallet:list,proxies:dict):
         try:
-            #sleep(1)
+            sleep(1)
             result = self.connect_proxy(wallet[0],proxies)
             if result > 0:
                 str_ = "found: "+str(wallet[0])
@@ -117,7 +117,7 @@ class Brute():
                     ll = self.fill_add_list()
                     for index in range(0,len(ll)):
                         threading.Thread(target=self.thread_func_proxy,args=(ll[index],proxies,)).start()
-                        #sleep(1)
+                        sleep(1)
                 except BaseException as ex:
                     raise ex
         elif not use_proxy:
