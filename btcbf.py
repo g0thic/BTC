@@ -7,6 +7,7 @@ import threading
 import sys
 import os
 from fp.fp import FreeProxy
+import random
 
 
 
@@ -16,7 +17,7 @@ class StaticMethods():
     @staticmethod
     def get_some_proxies():
         proxy_dict :dict = dict()
-        for i in range(0,10):
+        for i in range(0,50):
             proxy_server = FreeProxy(rand=True).get()
             proxy_dict.__setitem__(str(i),str(proxy_server))
         return proxy_dict
@@ -33,14 +34,13 @@ class StaticMethods():
             
             return -1
     @staticmethod
-    def connect_proxy(address,proxies):
+    def connect_proxy(address,proxies:dict):
         try:
-            #proxy_dic = StaticClass().fill_proxy_dic()
-            #StaticClass().fill_proxy_dic()
-            c = requests.get("https://blockchain.info/q/getreceivedbyaddress/"+str(address),proxies=proxies)
-            return int(c.text)
-        except BaseException as bx:
-            
+            #x = proxies.__len__()
+            p_ ={1: proxies[str(random.randrange(proxies.__len__()))]}
+            result_ = requests.get("https://blockchain.info/q/getreceivedbyaddress/"+str(address),proxies=p_)
+            return int(result_.text)
+        except BaseException:
             return -1
           
     @staticmethod
@@ -93,7 +93,7 @@ class Brute():
     
     def thread_func_proxy(self,wallet:list,proxies:dict):
         try:
-            sleep(1)
+            #sleep(1)
             result = self.connect_proxy(wallet[0],proxies)
             if result > 0:
                 str_ = "found: "+str(wallet[0])
@@ -113,13 +113,14 @@ class Brute():
         ll = list()
         BRUTE = True
         if use_proxy: 
+            print("fetching proxies...")
             proxies = StaticMethods().get_some_proxies()
             while BRUTE:
                 try:
                     ll = self.fill_add_list()
                     for index in range(0,len(ll)):
                         threading.Thread(target=self.thread_func_proxy,args=(ll[index],proxies,)).start()
-                        sleep(1)
+                        #sleep(1)
                 except BaseException as ex:
                     raise ex
         elif not use_proxy:
@@ -166,7 +167,7 @@ class Run():
     def KeyBoardThread(self):
         while True:
             try:
-                continue
+                sleep(1)
             except KeyboardInterrupt as kex:
                 break
             except BaseException as kex:
@@ -175,9 +176,9 @@ class Run():
     def start_worker(self):
         try:
             
-            self.p_.apply_async(func=self.worker_function)
-            self.t1.apply(self.KeyBoardThread)
-            self.stop_worker()
+            self.p_.apply(func=self.worker_function)
+            #self.t1.apply(self.KeyBoardThread)
+            #self.stop_worker()
         except BaseException as ex:
             self.stop_worker()
             
