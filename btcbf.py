@@ -26,8 +26,6 @@ class StaticMethods():
     @staticmethod
     def connect(address):
         try:
-            #proxy_dic = StaticClass().fill_proxy_dic()
-            #StaticClass().fill_proxy_dic()
             c = requests.get("https://blockchain.info/q/getreceivedbyaddress/"+str(address))
             return int(c.text)
         except BaseException as bx:
@@ -36,7 +34,6 @@ class StaticMethods():
     @staticmethod
     def connect_proxy(address,proxies:dict):
         try:
-            #x = proxies.__len__()
             p_ ={1: proxies[str(random.randrange(proxies.__len__()))]}
             result_ = requests.get("https://blockchain.info/q/getreceivedbyaddress/"+str(address),proxies=p_)
             return int(result_.text)
