@@ -18,7 +18,7 @@ class StaticMethods():
     @staticmethod
     def get_some_proxies():
         proxy: list = list()
-        for i in range(0, 2):
+        for i in range(2):
             try:
                 proxy_server = FreeProxy(rand=True).get()
                 proxy.append(str(proxy_server))
@@ -36,7 +36,7 @@ class StaticMethods():
             return -1
 
     @staticmethod
-    def connect(address, proxies: list):
+    def connect_P(address, proxies: list):
         try:
             p_ = {}
             if len(proxies) > 0:
@@ -78,13 +78,15 @@ class Brute():
     def connect(self, address):
         return StaticMethods().connect(address)
 
-    def connect(self, address, proxies):
-        return StaticMethods().connect(address, proxies)
+    def connect_P(self, address, proxies):
+        return StaticMethods().connect_P(address, proxies)
 
     def get_adr_list(selsf):
         aa = list()
         bb = address_factory.AddressFact()
-        cc = ["Lib1", "Lib2", "Lib3", "Lib4", "Lib5"]
+        cc = ["Lib1", "Lib2", "Lib3", "Lib4"]
+        # cc=["Lib5"]
+        # cc = ["Lib5"]
         for dd in cc:
             ee = bb.createAdress(dd).getAdrs()
             for item in ee:
@@ -110,10 +112,9 @@ class Brute():
         except BaseException as ex:
             return
 
-    def thread_func(self, wallet: list, proxies: list):
+    def thread_func_P(self, wallet: list, proxies: list):
         try:
-
-            result = self.connect(wallet[0], proxies)
+            result = self.connect_P(wallet[0], proxies)
             if result > 0:
                 str_ = "found: "+str(wallet[0])
                 StaticMethods().prnt_scr(str_)
@@ -134,7 +135,7 @@ class Brute():
                     st = Proxy_thread()
                     st.start()
                     for index in range(0, len(ll)):
-                        threading.Thread(target=self.thread_func, args=(
+                        threading.Thread(target=self.thread_func_P, args=(
                             ll[index], proxies,)).start()
                         sleep(index)
                     st.join()
@@ -176,9 +177,12 @@ class Run():
         except BaseException as ex:
             self.stop_worker()
 
-    def start_worker(self):
+    def start_worker(self,workers:int=1):
         try:
-            self.p_.apply_async(func=self.worker_function)
+            self.p_ = ThreadPool(workers)
+            for index in range(workers):
+                self.p_.apply_async(func=self.worker_function)
+                sleep(index)
             while (True):
                 try:
                     continue
@@ -190,8 +194,8 @@ class Run():
             return
 
     def run(self):
-        self.p_ = ThreadPool(200)
-        self.start_worker()
+        
+        self.start_worker(1000)
 
 
 if __name__ == "__main__":
