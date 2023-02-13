@@ -110,7 +110,6 @@ class Brute():
         ll = list()
         BRUTE = True
         if use_proxy: 
-            print("fetching proxies...")
             proxies = StaticMethods().get_some_proxies()
             while BRUTE:
                 try:
