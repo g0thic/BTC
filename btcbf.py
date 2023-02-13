@@ -10,7 +10,7 @@ from fp.fp import FreeProxy
 
 
 
-class StaticClass():
+class StaticMethods():
     def __init__(self) -> None:
         pass
     @staticmethod
@@ -56,10 +56,10 @@ class Brute():
     
     
     def connect(self,address):
-            return StaticClass().connect(address)
+            return StaticMethods().connect(address)
         
     def connect_proxy(self,address,proxies):
-        return StaticClass().connect_proxy(address,proxies) 
+        return StaticMethods().connect_proxy(address,proxies) 
     def fill_add_list(selsf):
         aa = list()
         bb = address_factory.AddressFact()
@@ -84,10 +84,10 @@ class Brute():
             result = self.connect(wallet[0])
             if result > 0:
                 str_ = "found: "+str(wallet[0])
-                StaticClass().prnt_scr(str_)
+                StaticMethods().prnt_scr(str_)
                 self.append_to_file(wallet)
             str_ = "searching for: "+str(wallet[0])+" "+str(result)
-            StaticClass().prnt_scr(str_)
+            StaticMethods().prnt_scr(str_)
         except BaseException as ex:
             self.exec = True
     
@@ -97,10 +97,10 @@ class Brute():
             result = self.connect_proxy(wallet[0],proxies)
             if result > 0:
                 str_ = "found: "+str(wallet[0])
-                StaticClass().prnt_scr(str_)
+                StaticMethods().prnt_scr(str_)
                 self.append_to_file(wallet)
             str_ = "searching for: "+str(wallet[0])+" "+str(result)
-            StaticClass().prnt_scr(str_)
+            StaticMethods().prnt_scr(str_)
         except BaseException as ex:
             self.exec = True
         
@@ -113,7 +113,7 @@ class Brute():
         ll = list()
         BRUTE = True
         if use_proxy: 
-            proxies = StaticClass().get_some_proxies()
+            proxies = StaticMethods().get_some_proxies()
             while BRUTE:
                 try:
                     ll = self.fill_add_list()
@@ -195,7 +195,6 @@ if __name__ == "__main__":
         d:Run = Run()
         d.run()
     except BaseException as e:
-        print(e)
         sys.exit()
     
 
