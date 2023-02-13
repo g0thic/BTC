@@ -1,3 +1,4 @@
+from typing import Any, Callable, Iterable, Mapping
 import requests
 from time import sleep
 import address_factory
@@ -9,32 +10,37 @@ import os
 from fp.fp import FreeProxy
 import random
 
-
-
 class StaticMethods():
     def __init__(self) -> None:
         pass
     @staticmethod
     def get_some_proxies():
-        proxy_dict :dict = dict()
-        for i in range(0,50):
-            proxy_server = FreeProxy(rand=True).get()
-            proxy_dict.__setitem__(str(i),str(proxy_server))
-        return proxy_dict
+        proxy :list = list()
+        for i in range(0,2):
+            try:
+                proxy_server = FreeProxy(rand=True).get()
+                proxy.append(str(proxy_server))
+            except BaseException:
+                continue
+        return proxy
         
         
     @staticmethod
     def connect(address):
         try:
+            #proxy_dic = StaticClass().fill_proxy_dic()
+            #StaticClass().fill_proxy_dic()
             c = requests.get("https://blockchain.info/q/getreceivedbyaddress/"+str(address))
             return int(c.text)
         except BaseException as bx:
             
             return -1
     @staticmethod
-    def connect_proxy(address,proxies:dict):
+    def connect(address,proxies:list):
         try:
-            p_ ={1: proxies[str(random.randrange(proxies.__len__()))]}
+            p_={}
+            if len(proxies) > 0:
+                p_ ={1: proxies[random.randrange(len(proxies))]}
             result_ = requests.get("https://blockchain.info/q/getreceivedbyaddress/"+str(address),proxies=p_)
             return int(result_.text)
         except BaseException:
@@ -45,18 +51,36 @@ class StaticMethods():
         #os.system("cls")
         print(txt)
     
-
+class Proxy_thread(threading.Thread):
+    def __init__(self, group: None = None, target: Callable[..., object] | None = None, name: str | None = None, args: Iterable[Any] = ..., kwargs: Mapping[str, Any] | None = None, *, daemon: bool | None = None) -> None:
+        super().__init__(group, target, name, args, kwargs, daemon=daemon)
+        self.data :list
+    @property
+    def PROXY_LIST(self):
+        return self.data
+    def update_proxies(self):
+        
+        p_ = StaticMethods().get_some_proxies()
+        self.data = p_
+        
+    def run(self):
+        self.update_proxies()
+        
+        
+    
+    
     
 class Brute():
     def __init__(self) -> None:
+        self.proxies = list()
         pass 
     
     
     def connect(self,address):
             return StaticMethods().connect(address)
         
-    def connect_proxy(self,address,proxies):
-        return StaticMethods().connect_proxy(address,proxies) 
+    def connect(self,address,proxies):
+        return StaticMethods().connect(address,proxies) 
     def fill_add_list(selsf):
         aa = list()
         bb = address_factory.AddressFact()
@@ -88,15 +112,15 @@ class Brute():
         except BaseException as ex:
             self.exec = True
     
-    def thread_func_proxy(self,wallet:list,proxies:dict):
+    def thread_func(self,wallet:list,proxies:list):
         try:
             sleep(1)
-            result = self.connect_proxy(wallet[0],proxies)
+            result = self.connect(wallet[0],proxies)
             if result > 0:
                 str_ = "found: "+str(wallet[0])
                 StaticMethods().prnt_scr(str_)
                 self.append_to_file(wallet)
-            str_ = "searching for: "+str(wallet[0])+" "+str(result)
+            str_ = "Searching for: "+str(wallet[0])+" "+str(result)
             StaticMethods().prnt_scr(str_)
         except BaseException as ex:
             self.exec = True
@@ -105,7 +129,8 @@ class Brute():
                
     
     exec = False
-              
+        
+
     def rand_brute(self,use_proxy=False):
         ll = list()
         BRUTE = True
@@ -114,9 +139,16 @@ class Brute():
             while BRUTE:
                 try:
                     ll = self.fill_add_list()
+                    st = Proxy_thread()
+                    st.start()
                     for index in range(0,len(ll)):
-                        threading.Thread(target=self.thread_func_proxy,args=(ll[index],proxies,)).start()
-                        sleep(1)
+                            threading.Thread(target=self.thread_func,args=(ll[index],proxies,)).start()
+                            sleep(1)
+                    if st.is_alive() == False:
+                        for i in st.PROXY_LIST:
+                            if i not in proxies:
+                                proxies.append(i)
+                    
                 except BaseException as ex:
                     raise ex
         elif not use_proxy:
@@ -133,55 +165,46 @@ class Brute():
 class Run():
     def __init__(self):
         
-        self.p_:ThreadPool
-        self.t1:ThreadPool
+        self.p_:ThreadPool = ThreadPool(200)
         
-    
-    def init_worker(self, pn:int=1):
-        self.p_= ThreadPool(processes=pn)
-        self.t1 = ThreadPool()
         
     def stop_worker(self):
         try:
-            self.t1.terminate()
-        except BaseException as ex:
-            pass
-        try:
             self.p_.close()
+            self.p_.terminate()
+            self.p_.join()
         except BaseException as ex:
             pass
         sleep(1)
-        print("Closing")
+        
     
     def worker_function(self):
         try:
-            Brute().rand_brute(True)
+            Brute().rand_brute(use_proxy=True)
         except BaseException as ex:
             self.stop_worker()
             
             
-    def KeyBoardThread(self):
-        while True:
-            try:
-                sleep(1)
-            except KeyboardInterrupt as kex:
-                break
-            except BaseException as kex:
-                break
-            
-    def start_worker(self):
+    
+    def start_worker(self,workers:int=1):
         try:
-            
-            self.p_.apply(func=self.worker_function)
-            #self.t1.apply(self.KeyBoardThread)
-            #self.stop_worker()
+            for i in range(workers):
+                self.p_.apply_async(func=self.worker_function)
+                sleep(i)
+            while(True):
+                try:
+                    continue
+                except KeyboardInterrupt as kex:
+                    break
+                except BaseException as kex:
+                    break
+            self.stop_worker()
         except BaseException as ex:
             self.stop_worker()
+            return
             
     def run(self):
-        self.init_worker(100)
-        sleep(1)
-        self.start_worker()
+        self.start_worker(100)
 
 if __name__ == "__main__":
     print("Welcome.")
