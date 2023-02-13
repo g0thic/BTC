@@ -166,9 +166,7 @@ class Run():
     def KeyBoardThread(self):
         while True:
             try:
-                x=0
-                for i in range(1,100):
-                    x=x+i
+                continue
             except KeyboardInterrupt as kex:
                 break
             except BaseException as kex:
