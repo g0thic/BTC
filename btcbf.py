@@ -2,13 +2,13 @@ from typing import Any, Callable, Iterable, Mapping
 import requests
 from time import sleep
 import address_factory
-from multiprocessing.pool import ThreadPool
-from multiprocessing import Process
+import multiprocessing as Multi_processing
 import threading
 import sys
 import os
 from fp.fp import FreeProxy
 import random
+import signal
 
 
 class StaticMethods():
@@ -57,16 +57,27 @@ class Proxy_thread(threading.Thread):
     def __init__(self, group: None = None, target: Callable[..., object] | None = None, name: str | None = None, args: Iterable[Any] = ..., kwargs: Mapping[str, Any] | None = None, *, daemon: bool | None = None) -> None:
         super().__init__(group, target, name, args, kwargs, daemon=daemon)
         self.data: list
-
+        self.is_running = True
+    
     @property
     def PROXY_LIST(self):
         return self.data
-
+    @property
+    def IS_RUNNING(self):
+        return self.is_running
+    @IS_RUNNING.setter
+    def IS_RUNNING(self,value:bool):
+        self.is_running = value
     def update_proxies(self):
-        p_ = StaticMethods().get_some_proxies()
-        self.data = p_
+        while self.is_running:
+            p_ = StaticMethods().get_some_proxies()
+            if len(p_) >0:
+                for item in p_:
+                    self.data.append(p_)
+            sleep(10)
 
     def run(self):
+        self.data = list()
         self.update_proxies()
 
 
@@ -84,11 +95,12 @@ class Brute():
     def get_adr_list(selsf):
         aa = list()
         bb = address_factory.AddressFact()
-        cc = ["Lib1", "Lib2", "Lib3", "Lib4"]
-        # cc=["Lib5"]
-        # cc = ["Lib5"]
+        cc = ["Lib1", "Lib2", "Lib3", "Lib4","Lib5"]
         for dd in cc:
-            ee = bb.createAdress(dd).getAdrs()
+            try:
+                ee = bb.createAdress(dd).getAdrs()
+            except BaseException:
+                continue
             for item in ee:
                 aa.append(item)
         return aa
@@ -107,7 +119,7 @@ class Brute():
                 str_ = "found: "+str(wallet[0])
                 StaticMethods().prnt_scr(str_)
                 self.append_to_file(wallet)
-            str_ = "searching for: "+str(wallet[0])+" "+str(result)
+            str_ = "address: "+str(wallet[0])+" result:"+str(result)
             StaticMethods().prnt_scr(str_)
         except BaseException as ex:
             return
@@ -119,90 +131,124 @@ class Brute():
                 str_ = "found: "+str(wallet[0])
                 StaticMethods().prnt_scr(str_)
                 self.append_to_file(wallet)
-            str_ = "Searching for: "+str(wallet[0])+" "+str(result)
+            str_ = "address: "+str(wallet[0])+" result: "+str(result)
             StaticMethods().prnt_scr(str_)
+            
         except BaseException as ex:
             return
-
+    
+    def rb_P(self):
+        proxies = StaticMethods().get_some_proxies()
+        st = Proxy_thread()
+        st.start()
+        while True:
+                try:
+                    ll = self.get_adr_list()
+                    for index in range(0, len(ll)):
+                        t = threading.Thread(target=self.thread_func_P, args=(
+                            ll[index], proxies,))
+                        t.start()
+                        t.join()
+                        sleep(index)
+                    proxies = st.PROXY_LIST
+                except BaseException as ex:
+                    st.IS_RUNNING = False
+                    st.join()
+                    raise ex
+    def rb_(self):
+        while True:
+                try:
+                    ll = self.get_adr_list()
+                    for index in range(0, len(ll)):
+                        t_=threading.Thread(target=self.thread_func,
+                                         args=(ll[index],))
+                        t_.start()
+                        t_.join()
+                        sleep(index)
+                except BaseException as ex:
+                    raise ex
+   
     def rand_brute(self, use_proxy=False):
         ll = list()
         BRUTE = True
         if use_proxy:
-            proxies = StaticMethods().get_some_proxies()
-            while BRUTE:
-                try:
-                    ll = self.get_adr_list()
-                    st = Proxy_thread()
-                    st.start()
-                    for index in range(0, len(ll)):
-                        threading.Thread(target=self.thread_func_P, args=(
-                            ll[index], proxies,)).start()
-                        sleep(index)
-                    st.join()
-                    for i in st.PROXY_LIST:
-                        if i not in proxies:
-                            proxies.append(i)
-
-                except BaseException as ex:
+            try:
+                self.rb_P()
+                
+            except BaseException as ex:
                     raise ex
         elif not use_proxy:
             while BRUTE:
                 try:
-                    ll = self.get_adr_list()
-                    for index in range(0, len(ll)):
-                        threading.Thread(target=self.thread_func,
-                                         args=(ll[index],)).start()
-                        sleep(index)
+                    self.rb_()
                 except BaseException as ex:
                     raise ex
 
 
 class Run():
     def __init__(self):
-
-        self.p_: ThreadPool
+        self.ProcessList : list
+        self.shared_ : Multi_processing.Manager().list
 
     def stop_worker(self):
         try:
-            self.p_.close()
-            self.p_.terminate()
-            self.p_.join()
+            if len(self.ProcessList) > 0:
+                for item in self.ProcessList:
+                    try:
+                        os.kill(item,signal.SIGINT)
+                        sleep(1)
+                    except BaseException as eb:
+                        continue
         except BaseException as ex:
             pass
-        sleep(1)
 
-    def worker_function(self):
+    def worker_function(self,use_proxy,n,):
         try:
-            Brute().rand_brute(use_proxy=True)
+            Brute().rand_brute(use_proxy=use_proxy)
         except BaseException as ex:
-            self.stop_worker()
+            n[0]=False
+            
+            
 
-    def start_worker(self,workers:int=1):
+    def start_worker(self,workers:int=2,use_proxy:bool=False):
         try:
-            self.p_ = ThreadPool(workers)
+            
             for index in range(workers):
-                self.p_.apply_async(func=self.worker_function)
+                if self.shared_[0] == False:
+                    break
+                tt = Multi_processing.Process(target=self.worker_function,args=(use_proxy,self.shared_,))
+                tt.start()
+                self.ProcessList.append(tt.pid)
                 sleep(index)
-            while (True):
+            while (self.shared_[0]== True):
                 try:
                     continue
                 except BaseException as kex:
                     break
+            self.shared_[0]=False
             self.stop_worker()
         except BaseException as ex:
+            self.shared_[0]=False
             self.stop_worker()
-            return
+
 
     def run(self):
-        
-        self.start_worker(1000)
+        try:
+            self.ProcessList = list()
+            self.shared_ =  Multi_processing.Manager().list()
+            self.shared_.append(True)
+            self.RUNNING = True
+            self.start_worker(workers=1000,use_proxy=True)
+        except BaseException as ex:
+            self.stop_worker()
 
 
 if __name__ == "__main__":
+    
     print("Welcome.")
     try:
-
         d: Run = Run()
         d.run()
+        print("See you.")
     except BaseException as e:
         sys.exit()
