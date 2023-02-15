@@ -37,6 +37,7 @@ class StaticMethods():
 
     @staticmethod
     def connect_P(address, proxies: list):
+        p_=[]
         try:
             p_ = {}
             if len(proxies) > 0:
@@ -95,7 +96,7 @@ class Brute():
     def get_adr_list(selsf):
         aa = list()
         bb = address_factory.AddressFact()
-        cc = ["Lib1", "Lib2", "Lib3", "Lib4","Lib5"]
+        cc = ["Lib1", "Lib2", "Lib3", "Lib4","Lib5","Lib6"]
         for dd in cc:
             try:
                 ee = bb.createAdress(dd).getAdrs()
