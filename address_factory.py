@@ -9,6 +9,12 @@ from hdwallet.utils import is_mnemonic
 from hdwallet import *
 import bitcoinlib.wallets
 import bitcoinlib.keys as Keys
+import codecs
+import ecdsa
+import hashlib
+import base58
+import binascii
+
 
 
 class Address(object):
@@ -28,7 +34,6 @@ class Lib1(Address):
         key = Key()
         self.address.clear()
         self.address.append([key.address, key.to_wif(), "Lib1"])
-
 
 class Lib2(Address):
     MAX = 115792089237316195423570985008687907852837564279074904382605163141518161494337
@@ -72,7 +77,6 @@ class Lib2(Address):
         address = pub.get_address()
         self.address.append(
             [address.to_string(), priv.to_wif(), priv.to_bytes()])
-
 
 class Lib3(Address):
     MAINNET = "mainnet"
@@ -148,7 +152,6 @@ class Lib3(Address):
         hex_ = wallet.key.__dict__[self.HEX]
         self.address.append([adr, key, hex_])
 
-
 class Lib4(Address):
 
     def __init__(self) -> None:
@@ -218,9 +221,7 @@ class Lib4(Address):
         h = is_mnemonic(mnemonic=wo)
         if h:
             i.from_mnemonic(wo)
-
             addr = i.p2wsh_in_p2sh_address()
-
             self.address.append([addr, i.wif(), wo])
 
     def get_addr4(self):
@@ -231,7 +232,6 @@ class Lib4(Address):
         h = is_mnemonic(mnemonic=wo)
         if h:
             i.from_mnemonic(wo)
-
             add2 = i.p2wpkh_address()
             self.address.append([add2, i.wif(), wo])
 
@@ -243,9 +243,7 @@ class Lib4(Address):
         h = is_mnemonic(mnemonic=wo)
         if h:
             i.from_mnemonic(wo)
-
             addr3 = i.p2wsh_address()
-
             self.address.append([addr3, i.wif(), wo])
 
     def get_addr6(self):
@@ -255,11 +253,8 @@ class Lib4(Address):
         h = is_mnemonic(mnemonic=wo)
         if h:
             i.from_mnemonic(wo)
-
             addr = i.p2wsh_in_p2sh_address()
-
             self.address.append([addr, i.wif(), wo])
-
 
 class Lib5(Address):
     LANGUAGE = 'english'
@@ -329,9 +324,51 @@ class Lib5(Address):
     def get_adr6(self):
         k = Keys.HDKey(multisig=True)
         self.address.append([k.address(),k.private_byte,k.private_hex])
+  
+
+class Lib6(Address):
+    HEX = 'hex'
+    X0 = '0x'
+    B0 = '0b'
+    MAINNET = 'mainnet'
+    RIPEMD160   ='ripemd160'
+    EXT_PREFIX = "80"
+
+    def __init__(self) -> None:
+        super().__init__()
+        self.address.clear()
+        self.Get_Address()
+
+    def gen_HEX(self):
+        str_ = ""
+        for i in range(256):
+            str_ += bin(random.getrandbits(1)).replace(self.B0, "")
+        bb = int(str_, 2)
+        bb = hex(bb).replace(self.X0, "")
+        return str(bb)
+
+    def calc_wif(self,hex_):
+        private_key_static = hex_
+        extended_key = self.EXT_PREFIX+private_key_static
+        first_sha256 = hashlib.sha256(binascii.unhexlify(extended_key)).hexdigest()
+        second_sha256 = hashlib.sha256(binascii.unhexlify(first_sha256)).hexdigest()
+        final_key = extended_key+second_sha256[:8]
+        WIF = base58.b58encode(binascii.unhexlify(final_key))
+        return WIF.__str__().replace("b'","").replace("'","")
+    
+    def Get_Address(self):
+        try:
+            setup('mainnet')
+            hex_ = self.gen_HEX()
+            wif = self.calc_wif(hex_)
+            priv = PrivateKey.from_wif(wif)
+            pub = priv.get_public_key()
+            address = pub.get_address().to_string()
+            self.address.append([address, hex_,wif])
+        except Exception as ex:
+            self.Get_Address()
+
         
-
-
 class AddressFact():
     def createAdress(self, typ):
         targetclass = typ
@@ -339,11 +376,19 @@ class AddressFact():
 
 
 if __name__ == "__main__":
-    
-    k = Keys.HDKey(multisig=True)
-    print(k.private_hex)
-    
-    print(k.address())
-    print(k.private_byte)
+        aa = list()
+        bb = AddressFact()
+        cc = ["Lib1", "Lib2", "Lib3", "Lib4","Lib5"]
+        #cc=["Lib6"]
+        for dd in cc:
+            try:
+                ee = bb.createAdress(dd).getAdrs()
+            except BaseException:
+                continue
+            for item in ee:
+                aa.append(item)
+        for item in aa:
+            print(item)
+            
    
     
