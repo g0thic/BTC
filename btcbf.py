@@ -37,15 +37,15 @@ class StaticMethods():
 
     @staticmethod
     def connect_P(address, proxies: list):
-        p_=[]
         try:
-            p_ = {}
+            p_=[]
             if len(proxies) > 0:
                 p_ = {1: proxies[random.randrange(len(proxies))]}
+                url = "https://blockchain.info/q/getreceivedbyaddress/"+str(address)
             result_ = requests.get(
                 "https://blockchain.info/q/getreceivedbyaddress/"+str(address), proxies=p_)
             return int(result_.text)
-        except BaseException:
+        except BaseException as ex:
             return -1
 
     @staticmethod
@@ -186,7 +186,7 @@ class Brute():
                     raise ex
 
 
-class Run():
+class brute_manager():
     def __init__(self):
         self.ProcessList : list
         self.shared_ : Multi_processing.Manager().list
@@ -209,8 +209,6 @@ class Run():
         except BaseException as ex:
             n[0]=False
             
-            
-
     def start_worker(self,workers:int=2,use_proxy:bool=False):
         try:
             
@@ -233,23 +231,20 @@ class Run():
             self.stop_worker()
 
 
-    def run(self):
+    def manage(self):
         try:
             self.ProcessList = list()
             self.shared_ =  Multi_processing.Manager().list()
             self.shared_.append(True)
-            self.RUNNING = True
-            self.start_worker(workers=1000,use_proxy=True)
+            self.start_worker(workers=10,use_proxy=True)
         except BaseException as ex:
             self.stop_worker()
 
-
 if __name__ == "__main__":
-    
-    print("Welcome.")
+    StaticMethods.prnt_scr("Welcome")
     try:
-        d: Run = Run()
-        d.run()
-        print("See you.")
+        d: brute_manager = brute_manager()
+        d.manage()
+        StaticMethods.prnt_scr("see you")
     except BaseException as e:
         sys.exit()
