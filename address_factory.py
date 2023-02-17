@@ -189,7 +189,6 @@ class Lib4(Address):
             self.address.append([i.p2wsh_address(),i.wif(),wo])
             self.address.append([i.p2wpkh_address(),i.wif(),wo])
             self.address.append([i.p2wpkh_in_p2sh_address(),i.wif(),wo])
-            x=1/0
         except BaseException as e:
             pass
 
