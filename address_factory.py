@@ -26,12 +26,12 @@ class Lib1(Address):
 
     def __init__(self) -> None:
         super().__init__()
+        self.address.clear()
         self.GetAddress()
 
     def GetAddress(self):
         key = Key()
-        self.address.clear()
-        self.address.append([key.address, key.to_wif(), "Lib1"])
+        self.address.append([key.address, key.to_wif(), key.to_hex()])
 
 class Lib2(Address):
     MAX = 115792089237316195423570985008687907852837564279074904382605163141518161494337
@@ -157,26 +157,25 @@ class Lib4(Address):
         self.language = "english"
         self.address.clear()
         self.get_addr1()
-        self.get_addr3()
         self.get_addr2()
-        self.get_addr4()
-        self.get_addr5()
-        self.get_addr6()
-        self.get_addr7()
-        self.get_addr8()
+        self.get_addr3()
 
-    def get_addr8(self):
+    def get_addr1(self):
 
         i: BIP49HDWallet = BIP49HDWallet()
         wo = Mnemonic(self.language).generate()
-
         h = is_mnemonic(wo)
         if h:
             i.from_mnemonic(wo)
-            add2 = i.p2wsh_in_p2sh_address()
-            self.address.append([add2, i.wif(), wo])
-
-    def get_addr7(self):
+            self.address.append([i.address(), i.wif(), wo])
+            self.address.append([i.p2sh_address(),i.wif(),wo])
+            self.address.append([i.p2pkh_address(),i.wif(),wo])
+            self.address.append([i.p2wsh_address(),i.wif(),wo])
+            self.address.append([i.p2wpkh_address(),i.wif(),wo])
+            self.address.append([i.p2wpkh_in_p2sh_address(),i.wif(),wo])
+            print("hello")
+            
+    def get_addr2(self):
         try:
             i: BIP49HDWallet = BIP49HDWallet()
             m = Mnemonic(self.language)
@@ -184,75 +183,32 @@ class Lib4(Address):
             h = is_mnemonic(wo)
             if h:
                 i.from_mnemonic(wo)
-                add2 = i.p2wsh_in_p2sh_address()
-                self.address.append([add2, i.wif(), wo])
-
+                self.address.append([i.address(), i.wif(), wo])
+            self.address.append([i.p2sh_address(),i.wif(),wo])
+            self.address.append([i.p2pkh_address(),i.wif(),wo])
+            self.address.append([i.p2wsh_address(),i.wif(),wo])
+            self.address.append([i.p2wpkh_address(),i.wif(),wo])
+            self.address.append([i.p2wpkh_in_p2sh_address(),i.wif(),wo])
+            x=1/0
         except BaseException as e:
-            print(e)
+            pass
 
-    def get_addr2(self):
-        i: BIP44HDWallet = BIP44HDWallet()
 
-        m = Mnemonic(self.language)
-        wo = m.generate(strength=128)
-        h = is_mnemonic(mnemonic=wo)
-        if h:
-            i.from_mnemonic(wo)
-            add2 = i.p2wpkh_address()
-            self.address.append([add2, i.wif(), wo])
 
     def get_addr3(self):
         i: BIP44HDWallet = BIP44HDWallet()
-        m = Mnemonic(self.language)
-        wo = m.generate(strength=128)
-        h = is_mnemonic(mnemonic=wo)
-        if h:
-            i.from_mnemonic(wo)
-            addr3 = i.p2wsh_address()
-            self.address.append([addr3, i.wif(), wo])
-
-    def get_addr1(self):
-        i: BIP44HDWallet = BIP44HDWallet()
-
-        m = Mnemonic(self.language)
-        wo = m.generate(strength=128)
-        h = is_mnemonic(mnemonic=wo)
-        if h:
-            i.from_mnemonic(wo)
-            addr = i.p2wsh_in_p2sh_address()
-            self.address.append([addr, i.wif(), wo])
-
-    def get_addr4(self):
-        i: BIP44HDWallet = BIP44HDWallet()
 
         m = Mnemonic(self.language)
         wo = m.generate(strength=256)
         h = is_mnemonic(mnemonic=wo)
         if h:
             i.from_mnemonic(wo)
-            add2 = i.p2wpkh_address()
-            self.address.append([add2, i.wif(), wo])
-
-    def get_addr5(self):
-        i: BIP44HDWallet = BIP44HDWallet()
-
-        m = Mnemonic(self.language)
-        wo = m.generate(strength=256)
-        h = is_mnemonic(mnemonic=wo)
-        if h:
-            i.from_mnemonic(wo)
-            addr3 = i.p2wsh_address()
-            self.address.append([addr3, i.wif(), wo])
-
-    def get_addr6(self):
-        i: BIP44HDWallet = BIP44HDWallet()
-        m = Mnemonic(self.language)
-        wo = m.generate(strength=256)
-        h = is_mnemonic(mnemonic=wo)
-        if h:
-            i.from_mnemonic(wo)
-            addr = i.p2wsh_in_p2sh_address()
-            self.address.append([addr, i.wif(), wo])
+            self.address.append([i.address(), i.wif(), wo])
+            self.address.append([i.p2sh_address(),i.wif(),wo])
+            self.address.append([i.p2pkh_address(),i.wif(),wo])
+            self.address.append([i.p2wsh_address(),i.wif(),wo])
+            self.address.append([i.p2wpkh_address(),i.wif(),wo])
+            self.address.append([i.p2wpkh_in_p2sh_address(),i.wif(),wo])
 
 class Lib5(Address):
     LANGUAGE = 'english'
@@ -277,9 +233,7 @@ class Lib5(Address):
         
         w = bitcoinlib.wallets.wallet_create_or_open(name, keys=p, network=self.BITCOIN)
         key_ = w.get_key()
-        wif = key_.wif
-        address = key_.address
-        self.address.append([address, wif, p])
+        self.address.append([key_.address, key_.wif, p])
 
     def get_adr2(self):
         name = random.choice(string.ascii_letters)
@@ -288,9 +242,8 @@ class Lib5(Address):
         w = bitcoinlib.wallets.wallet_create_or_open(
             name, keys=p, network=self.BITCOIN, witness_type=self.SEGWIT)
         key_ = w.get_key()
-        wif = key_.wif
-        address = key_.address
-        self.address.append([address, wif, p])
+        
+        self.address.append([key_.address, key_.wif, p])
 
     def get_adr3(self):
         name = random.choice(string.ascii_letters)
@@ -299,10 +252,9 @@ class Lib5(Address):
         
         w = bitcoinlib.wallets.wallet_create_or_open(
             name, keys=p, network=self.BITCOIN, witness_type=self.P2SH_SEGWIT)
+        
         key_ = w.get_key()
-        wif = key_.wif
-        address = key_.address
-        self.address.append([address, wif, p])
+        self.address.append([key_.address, key_.wif, p])
 
     def get_adr4(self):
         name = random.choice(string.ascii_letters)
@@ -329,15 +281,16 @@ class Lib6(Address):
     X0 = '0x'
     B0 = '0b'
     MAINNET = 'mainnet'
-    RIPEMD160 ='ripemd160'
+    RIPEMD160   ='ripemd160'
     EXT_PREFIX = "80"
 
     def __init__(self) -> None:
         super().__init__()
         self.address.clear()
-        self.Get_Address()
+        for counter in range(0,5):
+            self.Get_Address()
 
-    def gen_HEX(self):
+    def gen_hex(self):
         str_ = ""
         for i in range(256):
             str_ += bin(random.getrandbits(1)).replace(self.B0, "")
@@ -357,12 +310,16 @@ class Lib6(Address):
     def Get_Address(self):
         try:
             setup('mainnet')
-            hex_ = self.gen_HEX()
+            hex_ = self.gen_hex()
             wif = self.calc_wif(hex_)
             priv = PrivateKey.from_wif(wif)
             pub = priv.get_public_key()
-            address = pub.get_address().to_string()
+            address = pub.get_address(False).to_string()
+            c_address = pub.get_address(True).to_string()
+            seg_adr = pub.get_segwit_address().to_string()
             self.address.append([address, hex_,wif])
+            self.address.append([seg_adr,hex_,wif])
+            self.address.append([c_address,hex_,wif])
         except Exception as ex:
             self.Get_Address()
 
@@ -373,20 +330,4 @@ class AddressFact():
         return globals()[targetclass]()
 
 
-if __name__ == "__main__":
-        aa = list()
-        bb = AddressFact()
-        cc = ["Lib1", "Lib2", "Lib3", "Lib4","Lib5"]
-        #cc=["Lib6"]
-        for dd in cc:
-            try:
-                ee = bb.createAdress(dd).getAdrs()
-            except BaseException:
-                continue
-            for item in ee:
-                aa.append(item)
-        for item in aa:
-            print(item)
-            
-   
     
