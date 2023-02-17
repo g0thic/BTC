@@ -153,7 +153,7 @@ class Lib5(Address):
     X0 = '0x'
     B0 = '0b'
     MAINNET = 'mainnet'
-    RIPEMD160   ='ripemd160'
+    RIPEMD160  ='ripemd160'
     EXT_PREFIX = "80"
 
     def __init__(self) -> None:
