@@ -83,6 +83,12 @@ class Proxy_thread(threading.Thread):
 
 
 class Brute():
+    LIB1 = "Lib1"
+    LIB2 = "Lib2"
+    LIB3 = "Lib3"
+    LIB4 = "Lib4"
+    LIB5 = "Lib5"
+    LIB6 = "Lib6"
     def __init__(self) -> None:
         self.proxies = list()
         pass
@@ -96,7 +102,7 @@ class Brute():
     def get_adr_list(selsf):
         aa = list()
         bb = address_factory.AddressFact()
-        cc = ["Lib1", "Lib2", "Lib3", "Lib4","Lib5","Lib6"]
+        cc = [self.LIB1, self.LIB2, self.LIB3,self.LIB4,self.LIB5,self.LIB6]
         for dd in cc:
             try:
                 ee = bb.createAdress(dd).getAdrs()
