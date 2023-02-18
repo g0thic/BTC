@@ -99,7 +99,7 @@ class Brute():
     def connect_P(self, address, proxies):
         return StaticMethods().connect_P(address, proxies)
 
-    def get_adr_list(selsf):
+    def get_adr_list(self):
         aa = list()
         bb = address_factory.AddressFact()
         cc = [self.LIB1, self.LIB2, self.LIB3,self.LIB4,self.LIB5,self.LIB6]
