@@ -11,6 +11,7 @@ import random
 import signal
 
 
+
 class StaticMethods():
     def __init__(self) -> None:
         pass
@@ -126,8 +127,12 @@ class Brute():
                 str_ = "found: "+str(wallet[0])
                 StaticMethods().prnt_scr(str_)
                 self.append_to_file(wallet)
-            str_ = "address: "+str(wallet[0])+" result:"+str(result)
-            StaticMethods().prnt_scr(str_)
+            elif result == 0:
+                str_ = "address: "+str(wallet[0])+" result:"+str(result)
+                StaticMethods().prnt_scr(str_)
+            elif result == -1:
+                str_ = "connection error"
+                StaticMethods().prnt_scr(str_)
         except BaseException as ex:
             return
 
@@ -138,8 +143,12 @@ class Brute():
                 str_ = "found: "+str(wallet[0])
                 StaticMethods().prnt_scr(str_)
                 self.append_to_file(wallet)
-            str_ = "address: "+str(wallet[0])+" result: "+str(result)
-            StaticMethods().prnt_scr(str_)
+            elif result == 0:
+                str_ = "address: "+str(wallet[0])+" result: "+str(result)
+                StaticMethods().prnt_scr(str_)
+            elif result == -1:
+                str_ = "connection error"
+                StaticMethods().prnt_scr(str_)
             
         except BaseException as ex:
             return
@@ -203,7 +212,7 @@ class brute_manager():
                 for item in self.ProcessList:
                     try:
                         os.kill(item,signal.SIGINT)
-                        sleep(1)
+                        #sleep(1)
                     except BaseException as eb:
                         continue
         except BaseException as ex:
@@ -215,7 +224,7 @@ class brute_manager():
         except BaseException as ex:
             n[0]=False
             
-    def start_worker(self,workers:int=2,use_proxy:bool=False):
+    def start_worker(self,workers:int,use_proxy:bool):
         try:
             
             for index in range(workers):
@@ -237,12 +246,12 @@ class brute_manager():
             self.stop_worker()
 
 
-    def manage(self):
+    def manage(self, total_workers:int = 2, enable_proxy:bool=False):
         try:
             self.ProcessList = list()
-            self.shared_ = Multi_processing.Manager().list()
+            self.shared_ =  Multi_processing.Manager().list()
             self.shared_.append(True)
-            self.start_worker(workers=10,use_proxy=True)
+            self.start_worker(workers=total_workers,use_proxy=enable_proxy)
         except BaseException as ex:
             self.stop_worker()
 
@@ -250,7 +259,7 @@ if __name__ == "__main__":
     StaticMethods.prnt_scr("Welcome")
     try:
         d: brute_manager = brute_manager()
-        d.manage()
+        d.manage(total_workers=10,enable_proxy=True)
         StaticMethods.prnt_scr("see you")
     except BaseException as e:
         sys.exit()
