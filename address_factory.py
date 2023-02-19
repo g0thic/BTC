@@ -2,17 +2,15 @@ from bit import Key
 from bitcoinutils.setup import setup
 from bitcoinutils.keys import PrivateKey
 import random
-import string
 from bitcoinaddress import Wallet
 from mnemonic import Mnemonic
 from hdwallet.utils import is_mnemonic
 from hdwallet import *
-import bitcoinlib.wallets
-import bitcoinlib.keys as Keys
 import hashlib
 import base58
 import binascii
 import secrets
+import os
 
 
 class Address(object):
@@ -32,37 +30,52 @@ class Lib1(Address):
     def GetAddress(self):
         key = Key()
         self.address.append([key.address, key.to_wif(), key.to_hex()])
+        self.address.append([key.segwit_address, key.to_wif(), key.to_hex()])
 
 
 class Lib2(Address):
     MAX = 115792089237316195423570985008687907852837564279074904382605163141518161494337
-
+    MAINNET = 'mainnet'
     def __init__(self) -> None:
         super().__init__()
         self.address.clear()
+        setup(self.MAINNET)
         self.GetAddress1()
         self.GetAddress2()
 
     def GetAddress2(self):
-        setup('mainnet')
+        
         priv = PrivateKey()
 
         pub = priv.get_public_key()
 
-        address = pub.get_address()
+        address_c = pub.get_address(True)
+        address = pub.get_address(False)
+        address_seg = pub.get_segwit_address()
 
         self.address.append(
-            [address.to_string(), priv.to_wif(), priv.to_bytes()])
+            [address.to_string(), priv.to_wif(),priv.key.to_string().hex()])
+        self.address.append(
+            [address_c.to_string(), priv.to_wif(),priv.key.to_string().hex()])
+        self.address.append(
+            [address_seg.to_string(), priv.to_wif(),priv.key.to_string().hex()])
+        
 
     def GetAddress1(self):
-        setup('mainnet')
         x = random.randrange(
             1, self.MAX)
         priv = PrivateKey(secret_exponent=x)
         pub = priv.get_public_key()
-        address = pub.get_address()
+        address_c = pub.get_address(True)
+        address = pub.get_address(False)
+        address_seg = pub.get_segwit_address()
+
         self.address.append(
-            [address.to_string(), priv.to_wif(), priv.to_bytes()])
+            [address.to_string(), priv.to_wif(),priv.key.to_string().hex()])
+        self.address.append(
+            [address_c.to_string(), priv.to_wif(),priv.key.to_string().hex()])
+        self.address.append(
+            [address_seg.to_string(), priv.to_wif(),priv.key.to_string().hex()])
 
 
 class Lib3(Address):
@@ -99,10 +112,13 @@ class Lib3(Address):
 
 
 class Lib4(Address):
-
+    CHINESE_TRAD = "chinese_traditional"
+    ENGLISH = 'english'
+    JAPANESE = 'japanese'
+    KOREAN = 'korean'
     def __init__(self) -> None:
         super().__init__()
-        self.language = "english"
+        
         self.address.clear()
         self.get_addr1()
         self.get_addr2()
@@ -111,43 +127,48 @@ class Lib4(Address):
     def get_addr1(self):
 
         i: BIP32HDWallet = BIP32HDWallet()
-        wo = Mnemonic(self.language).generate()
-        if is_mnemonic(wo):
-            i.from_mnemonic(wo)
-            self.address.append([i.address(), i.wif(), wo])
-            self.address.append([i.p2sh_address(), i.wif(), wo])
-            self.address.append([i.p2pkh_address(), i.wif(), wo])
-            self.address.append([i.p2wsh_address(), i.wif(), wo])
-            self.address.append([i.p2wpkh_address(), i.wif(), wo])
-            self.address.append([i.p2wpkh_in_p2sh_address(), i.wif(), wo])
+        wo = Mnemonic(self.ENGLISH).generate()
+        i.from_mnemonic(wo)
+        self.address.append([i.address(), i.wif(), i.private_key()])
+        self.address.append([i.p2sh_address(), i.wif(), i.private_key()])
+        self.address.append([i.p2pkh_address(), i.wif(), i.private_key()])
+        self.address.append([i.p2wsh_address(), i.wif(), i.private_key()])
+        self.address.append([i.p2wpkh_address(), i.wif(), i.private_key()])
+        self.address.append(
+            [i.p2wpkh_in_p2sh_address(), i.wif(), i.private_key()])
 
     def get_addr2(self):
         try:
 
             i: BIP32HDWallet = BIP32HDWallet()
-            wo = Mnemonic(self.language).generate(strength=128)
-            if is_mnemonic(wo):
-                i.from_mnemonic(wo)
-                self.address.append([i.address(), i.wif(), wo])
-                self.address.append([i.p2sh_address(), i.wif(), wo])
-                self.address.append([i.p2pkh_address(), i.wif(), wo])
-                self.address.append([i.p2wsh_address(), i.wif(), wo])
-                self.address.append([i.p2wpkh_address(), i.wif(), wo])
-                self.address.append([i.p2wpkh_in_p2sh_address(), i.wif(), wo])
+            wo = Mnemonic(self.ENGLISH).generate(strength=128)
+            i.from_mnemonic(wo)
+            self.address.append([i.address(), i.wif(), i.private_key()])
+            self.address.append(
+                [i.p2sh_address(), i.wif(), i.private_key()])
+            self.address.append(
+                [i.p2pkh_address(), i.wif(), i.private_key()])
+            self.address.append(
+                [i.p2wsh_address(), i.wif(), i.private_key()])
+            self.address.append(
+                [i.p2wpkh_address(), i.wif(), i.private_key()])
+            self.address.append(
+                [i.p2wpkh_in_p2sh_address(), i.wif(), i.private_key()])
         except BaseException as e:
-            pass
+            return
 
     def get_addr3(self):
         i: BIP32HDWallet = BIP32HDWallet()
-        wo = Mnemonic(self.language).generate(strength=256)
-        if is_mnemonic(wo):
-            i.from_mnemonic(wo)
-            self.address.append([i.address(), i.wif(), wo])
-            self.address.append([i.p2sh_address(), i.wif(), wo])
-            self.address.append([i.p2pkh_address(), i.wif(), wo])
-            self.address.append([i.p2wsh_address(), i.wif(), wo])
-            self.address.append([i.p2wpkh_address(), i.wif(), wo])
-            self.address.append([i.p2wpkh_in_p2sh_address(), i.wif(), wo])
+        wo = Mnemonic(self.ENGLISH).generate(strength=256)
+
+        i.from_mnemonic(wo)
+        self.address.append([i.address(), i.wif(), i.private_key()])
+        self.address.append([i.p2sh_address(), i.wif(), i.private_key()])
+        self.address.append([i.p2pkh_address(), i.wif(), i.private_key()])
+        self.address.append([i.p2wsh_address(), i.wif(), i.private_key()])
+        self.address.append([i.p2wpkh_address(), i.wif(), i.private_key()])
+        self.address.append(
+            [i.p2wpkh_in_p2sh_address(), i.wif(), i.private_key()])
 
 
 class Lib5(Address):
@@ -155,8 +176,7 @@ class Lib5(Address):
     X0 = '0x'
     B0 = '0b'
     MAINNET = 'mainnet'
-    RIPEMD160 = 'ripemd160'
-    EXT_PREFIX = "80"
+    
 
     def __init__(self) -> None:
         super().__init__()
@@ -166,6 +186,7 @@ class Lib5(Address):
         self.get_adr1()
         self.get_adr2()
         self.get_adr3()
+        self.get_adr4()
 
     def gen_hex(self):
         str_ = ""
@@ -175,68 +196,46 @@ class Lib5(Address):
         bb = hex(bb).replace(self.X0, "")
         return str(bb)
 
-    def calc_wif(self, hex_):
-        private_key_static = hex_
-        extended_key = self.EXT_PREFIX+private_key_static
-        first_sha256 = hashlib.sha256(
-            binascii.unhexlify(extended_key)).hexdigest()
-        second_sha256 = hashlib.sha256(
-            binascii.unhexlify(first_sha256)).hexdigest()
-        final_key = extended_key+second_sha256[:8]
-        WIF = base58.b58encode(binascii.unhexlify(final_key))
-        return WIF.__str__().replace("b'", "").replace("'", "")
+
+    def get_adr4(self):
+        hex_ = os.urandom(32).hex()
+        key_ = Key().from_hex(hex_)
+        self.address.append([key_.address,key_.to_wif(),hex_])
+        self.address.append([key_.segwit_address,key_.to_wif(),hex_])
 
     def get_adr3(self):
+        try:
+            hex_ = secrets.token_hex(32)
+            key_ = Key().from_hex(hex_)
+            self.address.append([key_.address, key_.to_wif(), hex_])
+            self.address.append([key_.segwit_address, key_.to_wif(), hex_])
+        except BaseException as ex:
+            return
 
-        hex_ = secrets.token_hex(32)
-        wif = calc_wif(hex_)
-        priv = PrivateKey.from_wif(wif)
-        pub = priv.get_public_key()
-            
-        address = pub.get_address(False).to_string()
-        c_address = pub.get_address(True).to_string()
-        seg_adr = pub.get_segwit_address().to_string()
-            
-        self.address.append([address, hex_,wif])
-        self.address.append([seg_adr,hex_,wif])
-        self.address.append([c_address,hex_,wif])
-        
     def get_adr2(self):
-        hex_String = "0123456789abcdef"
-        hex_ = ''.join([secrets.choice(hex_String) for x in range(64)])
-        wif = calc_wif(hex_)
-        priv = PrivateKey.from_wif(wif)
-        pub = priv.get_public_key()
+        try:
+            hex_String = "0123456789abcdef"
+            hex_ = ''.join([secrets.choice(hex_String) for x in range(64)])
+            key_ = Key().from_hex(hex_)
+            self.address.append([key_.address,key_.to_wif(),hex_])
+            self.address.append([key_.segwit_address,key_.to_wif(),hex_])
             
-        address = pub.get_address(False).to_string()
-        c_address = pub.get_address(True).to_string()
-        seg_adr = pub.get_segwit_address().to_string()
-            
-        self.address.append([address, hex_,wif])
-        self.address.append([seg_adr,hex_,wif])
-        self.address.append([c_address,hex_,wif])
+        except BaseException as ex:
+            return
+
     
     def get_adr1(self):
         try:
             
             hex_ = self.gen_hex()
-            wif = self.calc_wif(hex_)
-            priv = PrivateKey.from_wif(wif)
-            pub = priv.get_public_key()
-            
-            address = pub.get_address(False).to_string()
-            c_address = pub.get_address(True).to_string()
-            seg_adr = pub.get_segwit_address().to_string()
-            
-            self.address.append([address, hex_,wif])
-            self.address.append([seg_adr,hex_,wif])
-            self.address.append([c_address,hex_,wif])
+            key_ = Key().from_hex(hex_)
+            self.address.append([key_.address,key_.to_wif(),hex_])
+            self.address.append([key_.segwit_address,key_.to_wif(),hex_])
         except Exception as ex:
-            self.Get_Address()
+            return
 
         
 class AddressFact():
     def createAdress(self, typ):
         targetclass = typ
         return globals()[targetclass]()
-
