@@ -12,6 +12,7 @@ import signal
 
 
 
+
 class StaticMethods():
     def __init__(self) -> None:
         pass
@@ -51,7 +52,6 @@ class StaticMethods():
 
     @staticmethod
     def prnt_scr(txt):
-        # os.system("cls")
         print(txt)
 
 
@@ -71,12 +71,17 @@ class Proxy_thread(threading.Thread):
     def IS_RUNNING(self,value:bool):
         self.is_running = value
     def update_proxies(self):
+        
         while self.is_running:
-            p_ = StaticMethods().get_some_proxies()
-            if len(p_) >0:
-                for item in p_:
-                    self.data.append(p_)
-            sleep(10)
+            try:
+                p_ = StaticMethods().get_some_proxies()
+                if len(p_) >0:
+                    for item in p_:
+                        self.data.append(p_)
+                sleep(10)
+            except BaseException as ex:
+                sleep(10)
+                continue
 
     def run(self):
         self.data = list()
@@ -89,6 +94,7 @@ class Brute():
     LIB3 = "Lib3"
     LIB4 = "Lib4"
     LIB5 = "Lib5"
+    LIB6 = "Lib6"
     def __init__(self) -> None:
         self.proxies = list()
         pass
@@ -159,13 +165,18 @@ class Brute():
         while True:
                 try:
                     ll = self.get_adr_list()
-                    for index in range(0, len(ll)):
-                        t = threading.Thread(target=self.thread_func_P, args=(
-                            ll[index], proxies,))
-                        t.start()
-                        t.join()
-                        sleep(index)
+                    t_list = list()
                     proxies = st.PROXY_LIST
+                    for index in range(0, len(ll)):
+                        t_ = threading.Thread(target=self.thread_func_P, args=(
+                            ll[index], proxies,))
+                        t_.start()
+                        t_list.append(t_)
+                        
+                    for item in t_list:
+                        item.join()
+                    sleep(len(ll))
+                    t_list.clear()
                 except BaseException as ex:
                     st.IS_RUNNING = False
                     st.join()
@@ -174,12 +185,16 @@ class Brute():
         while True:
                 try:
                     ll = self.get_adr_list()
+                    t_list = list()
                     for index in range(0, len(ll)):
                         t_=threading.Thread(target=self.thread_func,
                                          args=(ll[index],))
                         t_.start()
-                        t_.join()
-                        sleep(index)
+                        t_list.append(t_)
+                    for item in t_list:
+                        item.join()
+                    sleep(len(ll))
+                    t_list.clear()
                 except BaseException as ex:
                     raise ex
    
@@ -245,7 +260,7 @@ class brute_manager():
             self.stop_worker()
 
 
-    def manage(self, total_workers:int = 2, enable_proxy:bool=False):
+    def manage(self, total_workers:int, enable_proxy:bool):
         try:
             self.ProcessList = list()
             self.shared_ =  Multi_processing.Manager().list()
@@ -258,7 +273,7 @@ if __name__ == "__main__":
     StaticMethods.prnt_scr("Welcome")
     try:
         d: brute_manager = brute_manager()
-        d.manage(total_workers=10,enable_proxy=True)
+        d.manage(total_workers=2,enable_proxy=True)
         StaticMethods.prnt_scr("see you")
     except BaseException as e:
         sys.exit()
