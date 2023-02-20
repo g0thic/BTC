@@ -31,8 +31,8 @@ class StaticMethods():
     @staticmethod
     def connect(address):
         try:
-            c = requests.get(
-                "https://blockchain.info/q/getreceivedbyaddress/"+str(address))
+            url = "https://blockchain.info/q/getreceivedbyaddress/"+str(address)
+            c = requests.get(url)
             return int(c.text)
         except BaseException as bx:
             return -1
@@ -40,12 +40,12 @@ class StaticMethods():
     @staticmethod
     def connect_P(address, proxies: list):
         try:
-            p_=[]
+            #p_=[]
+            url = "https://blockchain.info/q/getreceivedbyaddress/"+str(address)
+            result_ = requests.Response()
             if len(proxies) > 0:
                 p_ = {1: proxies[random.randrange(len(proxies))]}
-                url = "https://blockchain.info/q/getreceivedbyaddress/"+str(address)
-            result_ = requests.get(
-                "https://blockchain.info/q/getreceivedbyaddress/"+str(address), proxies=p_)
+                result_ = requests.get(url, proxies=p_)
             return int(result_.text)
         except BaseException as ex:
             return -1
@@ -59,7 +59,7 @@ class Proxy_thread(threading.Thread):
     def __init__(self, group: None = None, target: Callable[..., object] | None = None, name: str | None = None, args: Iterable[Any] = ..., kwargs: Mapping[str, Any] | None = None, *, daemon: bool | None = None) -> None:
         super().__init__(group, target, name, args, kwargs, daemon=daemon)
         self.data: list
-        self.is_running = True
+        self.is_running : bool
     
     @property
     def PROXY_LIST(self):
@@ -77,13 +77,14 @@ class Proxy_thread(threading.Thread):
                 p_ = StaticMethods().get_some_proxies()
                 if len(p_) >0:
                     for item in p_:
-                        self.data.append(p_)
-                sleep(10)
+                        self.data.append(item)
+                sleep(1)
             except BaseException as ex:
                 sleep(10)
                 continue
 
     def run(self):
+        self.is_running = True
         self.data = list()
         self.update_proxies()
 
@@ -159,9 +160,17 @@ class Brute():
             return
     
     def rb_P(self):
-        proxies = StaticMethods().get_some_proxies()
+        #proxies = StaticMethods().get_some_proxies()
+        proxies = list()
         st = Proxy_thread()
         st.start()
+        sleep(5)
+        proxies = st.PROXY_LIST
+        while(len(proxies)==0):
+            try:
+                proxies = st.PROXY_LIST
+            except BaseException as ex:
+                continue
         while True:
                 try:
                     ll = self.get_adr_list()
@@ -172,20 +181,20 @@ class Brute():
                             ll[index], proxies,))
                         t_.start()
                         t_list.append(t_)
-                        
                     for item in t_list:
                         item.join()
-                    sleep(len(ll))
+                    sleep(len(ll)/int(random.uniform(1,len(ll))))
                     t_list.clear()
                 except BaseException as ex:
                     st.IS_RUNNING = False
                     st.join()
                     raise ex
     def rb_(self):
+        t_list = list()
         while True:
                 try:
                     ll = self.get_adr_list()
-                    t_list = list()
+                    
                     for index in range(0, len(ll)):
                         t_=threading.Thread(target=self.thread_func,
                                          args=(ll[index],))
@@ -208,11 +217,10 @@ class Brute():
             except BaseException as ex:
                     raise ex
         elif not use_proxy:
-            while BRUTE:
-                try:
-                    self.rb_()
-                except BaseException as ex:
-                    raise ex
+            try:
+                self.rb_()
+            except BaseException as ex:
+                raise ex
 
 
 class brute_manager():
@@ -247,7 +255,7 @@ class brute_manager():
                 tt = Multi_processing.Process(target=self.worker_function,args=(use_proxy,self.shared_,))
                 tt.start()
                 self.ProcessList.append(tt.pid)
-                sleep(index)
+                sleep(workers/int(random.uniform(1,workers)))
             while (self.shared_[0]== True):
                 try:
                     continue
@@ -270,10 +278,11 @@ class brute_manager():
             self.stop_worker()
 
 if __name__ == "__main__":
+
     StaticMethods.prnt_scr("Welcome")
     try:
         d: brute_manager = brute_manager()
-        d.manage(total_workers=2,enable_proxy=True)
+        d.manage(total_workers=5,enable_proxy=True)
         StaticMethods.prnt_scr("see you")
     except BaseException as e:
         sys.exit()
