@@ -154,7 +154,6 @@ class Brute():
             return
     
     def rb_P(self):
-        #proxies = StaticMethods().get_some_proxies()
         proxies = list()
         st = Proxy_thread()
         st.start()
