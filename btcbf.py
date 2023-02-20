@@ -133,11 +133,8 @@ class Brute():
                 str_ = "found: "+str(wallet[0])
                 StaticMethods().prnt_scr(str_)
                 self.append_to_file(wallet)
-            elif result == 0:
+            else:
                 str_ = "address: "+str(wallet[0])+" result:"+str(result)
-                StaticMethods().prnt_scr(str_)
-            elif result == -1:
-                str_ = "connection error"
                 StaticMethods().prnt_scr(str_)
         except BaseException as ex:
             return
@@ -149,11 +146,8 @@ class Brute():
                 str_ = "found: "+str(wallet[0])
                 StaticMethods().prnt_scr(str_)
                 self.append_to_file(wallet)
-            elif result == 0:
+            else:
                 str_ = "address: "+str(wallet[0])+" result: "+str(result)
-                StaticMethods().prnt_scr(str_)
-            elif result == -1:
-                str_ = "connection error"
                 StaticMethods().prnt_scr(str_)
             
         except BaseException as ex:
@@ -202,18 +196,15 @@ class Brute():
                         t_list.append(t_)
                     for item in t_list:
                         item.join()
-                    sleep(len(ll))
+                    sleep(len(ll)/int(random.uniform(1,len(ll))))
                     t_list.clear()
                 except BaseException as ex:
                     raise ex
    
     def rand_brute(self, use_proxy=False):
-        ll = list()
-        BRUTE = True
         if use_proxy:
             try:
                 self.rb_P()
-                
             except BaseException as ex:
                     raise ex
         elif not use_proxy:
