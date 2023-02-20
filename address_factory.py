@@ -16,7 +16,7 @@ import os
 class Address(object):
     address: list = list()
 
-    def get_addr(self):
+    def getAdrs(self):
         return self.address
 
 
