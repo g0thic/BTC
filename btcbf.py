@@ -157,7 +157,7 @@ class Brute():
         proxies = list()
         st = Proxy_thread()
         st.start()
-        sleep(5)
+        sleep(1)
         proxies = st.PROXY_LIST
         while True:
                 try:
