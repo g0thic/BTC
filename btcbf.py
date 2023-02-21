@@ -40,12 +40,12 @@ class StaticMethods():
     @staticmethod
     def connect_P(address, proxies: list):
         try:
-            #p_=[]
+            p_={}
             url = "https://blockchain.info/q/getreceivedbyaddress/"+str(address)
             result_ = requests.Response()
             if len(proxies) > 0:
                 p_ = {1: proxies[random.randrange(len(proxies))]}
-                result_ = requests.get(url, proxies=p_)
+            result_ = requests.get(url, proxies=p_)
             return int(result_.text)
         except BaseException as ex:
             return -1
@@ -159,11 +159,6 @@ class Brute():
         st.start()
         sleep(5)
         proxies = st.PROXY_LIST
-        while(len(proxies)==0):
-            try:
-                proxies = st.PROXY_LIST
-            except BaseException as ex:
-                continue
         while True:
                 try:
                     ll = self.get_adr_list()
