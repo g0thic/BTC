@@ -49,7 +49,21 @@ class StaticMethods():
             return int(result_.text)
         except BaseException as ex:
             return -1
-
+    is_stuck:bool = False
+    
+    
+    @staticmethod
+    def sleepy_t():
+        if(StaticMethods.is_stuck):
+            sleep(200)
+        else:
+            sleep(random.random()/random.random())
+    @staticmethod
+    def sleepy():
+        if(StaticMethods.is_stuck):
+            sleep(200)
+        else:
+            sleep(random.random()/random.random())
     @staticmethod
     def prnt_scr(txt):
         print(txt)
@@ -130,10 +144,16 @@ class Brute():
         try:
             result = self.connect(wallet[0])
             if result > 0:
+                StaticMethods.is_stuck = False
                 str_ = "found: "+str(wallet[0])
                 StaticMethods().prnt_scr(str_)
                 self.append_to_file(wallet)
+            elif result == -1:
+                StaticMethods.is_stuck = True
+                str_ = "address: "+str(wallet[0])+" result: "+str(result)
+                StaticMethods().prnt_scr(str_)
             else:
+                StaticMethods.is_stuck= False
                 str_ = "address: "+str(wallet[0])+" result:"+str(result)
                 StaticMethods().prnt_scr(str_)
         except BaseException as ex:
@@ -144,11 +164,18 @@ class Brute():
             result = self.connect_P(wallet[0], proxies)
             if result > 0:
                 str_ = "found: "+str(wallet[0])
-                StaticMethods().prnt_scr(str_)
+                StaticMethods.is_stuck = False
+                StaticMethods.prnt_scr(str_)
                 self.append_to_file(wallet)
-            else:
+            elif result == -1:
+                StaticMethods.is_stuck = True
                 str_ = "address: "+str(wallet[0])+" result: "+str(result)
                 StaticMethods().prnt_scr(str_)
+            else:
+                StaticMethods.is_stuck= False
+                str_ = "address: "+str(wallet[0])+" result: "+str(result)
+                StaticMethods().prnt_scr(str_)
+                
             
         except BaseException as ex:
             return
@@ -157,21 +184,22 @@ class Brute():
         proxies = list()
         st = Proxy_thread()
         st.start()
-        sleep(1)
+        sleep(5)
         proxies = st.PROXY_LIST
+        t_list = list()
         while True:
                 try:
                     ll = self.get_adr_list()
-                    t_list = list()
                     proxies = st.PROXY_LIST
-                    for index in range(0, len(ll)):
+                    for addr in ll:
                         t_ = threading.Thread(target=self.thread_func_P, args=(
-                            ll[index], proxies,))
+                            addr, proxies,))
                         t_.start()
                         t_list.append(t_)
+                        StaticMethods().sleepy_t()
                     for item in t_list:
                         item.join()
-                    sleep(len(ll)/int(random.uniform(1,len(ll))))
+                    StaticMethods().sleepy()
                     t_list.clear()
                 except BaseException as ex:
                     st.IS_RUNNING = False
@@ -182,20 +210,19 @@ class Brute():
         while True:
                 try:
                     ll = self.get_adr_list()
-                    
-                    for index in range(0, len(ll)):
-                        t_=threading.Thread(target=self.thread_func,
-                                         args=(ll[index],))
+                    for addr in ll:
+                        t_ = threading.Thread(target=self.thread_func, args=(addr,))
                         t_.start()
                         t_list.append(t_)
+                        StaticMethods.sleepy_t()
                     for item in t_list:
                         item.join()
-                    sleep(len(ll)/int(random.uniform(1,len(ll))))
+                    sleep(random.uniform(1,len(ll))/len(ll))
                     t_list.clear()
                 except BaseException as ex:
                     raise ex
    
-    def rand_brute(self, use_proxy=False):
+    def rand_brute(self, use_proxy:bool):
         if use_proxy:
             try:
                 self.rb_P()
@@ -262,12 +289,32 @@ class brute_manager():
         except BaseException as ex:
             self.stop_worker()
 
-if __name__ == "__main__":
 
-    StaticMethods.prnt_scr("Welcome")
+def run_app(workers:int):
     try:
         d: brute_manager = brute_manager()
-        d.manage(total_workers=5,enable_proxy=True)
+        d.manage(total_workers=workers,enable_proxy=True)
+    except BaseException as ex:
+        raise ex
+
+def user_input():
+    u_i = "ERROR"
+    c_ = 0
+    while(u_i.isnumeric()== False and c_ < 3):
+        u_i = input("number of threads >> ")
+        c_+=1
+    if c_ >= 3 and u_i.isnumeric() == False:
+        print("too many wrong inputs")
+        raise Exception("")
+    else:
+        return int(u_i)
+if __name__ == "__main__":
+    
+    try:
+        StaticMethods.prnt_scr("Welcome")
+        y = user_input()
+        run_app(workers=y)
         StaticMethods.prnt_scr("see you")
     except BaseException as e:
+        StaticMethods.prnt_scr("see you")
         sys.exit()
