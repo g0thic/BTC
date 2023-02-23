@@ -138,7 +138,6 @@ class Lib4(Address):
         i: BIP32HDWallet = BIP32HDWallet()
         wo = Mnemonic(self.KOREAN).generate()
         i.from_mnemonic(wo)
-        self.address.append([i.address(), i.wif(), i.private_key()])
         self.address.append([i.p2sh_address(), i.wif(), i.private_key()])
         self.address.append([i.p2pkh_address(), i.wif(), i.private_key()])
         self.address.append([i.p2wsh_address(), i.wif(), i.private_key()])
@@ -150,7 +149,6 @@ class Lib4(Address):
         i: BIP32HDWallet = BIP32HDWallet()
         wo = Mnemonic(self.KOREAN).generate(strength=128)
         i.from_mnemonic(wo)
-        self.address.append([i.address(), i.wif(), i.private_key()])
         self.address.append(
             [i.p2sh_address(), i.wif(), i.private_key()])
         self.address.append(
@@ -166,7 +164,6 @@ class Lib4(Address):
         i: BIP32HDWallet = BIP32HDWallet()
         wo = Mnemonic(self.KOREAN).generate(strength=256)
         i.from_mnemonic(wo)
-        self.address.append([i.address(), i.wif(), i.private_key()])
         self.address.append([i.p2sh_address(), i.wif(), i.private_key()])
         self.address.append([i.p2pkh_address(), i.wif(), i.private_key()])
         self.address.append([i.p2wsh_address(), i.wif(), i.private_key()])
@@ -179,7 +176,6 @@ class Lib4(Address):
         i: BIP32HDWallet = BIP32HDWallet()
         wo = Mnemonic(self.JAPANESE).generate()
         i.from_mnemonic(wo)
-        self.address.append([i.address(), i.wif(), i.private_key()])
         self.address.append([i.p2sh_address(), i.wif(), i.private_key()])
         self.address.append([i.p2pkh_address(), i.wif(), i.private_key()])
         self.address.append([i.p2wsh_address(), i.wif(), i.private_key()])
@@ -191,7 +187,6 @@ class Lib4(Address):
         i: BIP32HDWallet = BIP32HDWallet()
         wo = Mnemonic(self.JAPANESE).generate(strength=128)
         i.from_mnemonic(wo)
-        self.address.append([i.address(), i.wif(), i.private_key()])
         self.address.append(
             [i.p2sh_address(), i.wif(), i.private_key()])
         self.address.append(
@@ -207,7 +202,7 @@ class Lib4(Address):
         i: BIP32HDWallet = BIP32HDWallet()
         wo = Mnemonic(self.JAPANESE).generate(strength=256)
         i.from_mnemonic(wo)
-        self.address.append([i.address(), i.wif(), i.private_key()])
+        
         self.address.append([i.p2sh_address(), i.wif(), i.private_key()])
         self.address.append([i.p2pkh_address(), i.wif(), i.private_key()])
         self.address.append([i.p2wsh_address(), i.wif(), i.private_key()])
@@ -219,7 +214,6 @@ class Lib4(Address):
         i: BIP32HDWallet = BIP32HDWallet()
         wo = Mnemonic(self.CHINESE_TRAD).generate()
         i.from_mnemonic(wo)
-        self.address.append([i.address(), i.wif(), i.private_key()])
         self.address.append([i.p2sh_address(), i.wif(), i.private_key()])
         self.address.append([i.p2pkh_address(), i.wif(), i.private_key()])
         self.address.append([i.p2wsh_address(), i.wif(), i.private_key()])
@@ -229,9 +223,9 @@ class Lib4(Address):
 
     def get_addr5(self):
         i: BIP32HDWallet = BIP32HDWallet()
+        
         wo = Mnemonic(self.CHINESE_TRAD).generate(strength=128)
         i.from_mnemonic(wo)
-        self.address.append([i.address(), i.wif(), i.private_key()])
         self.address.append(
             [i.p2sh_address(), i.wif(), i.private_key()])
         self.address.append(
@@ -247,7 +241,6 @@ class Lib4(Address):
         i: BIP32HDWallet = BIP32HDWallet()
         wo = Mnemonic(self.CHINESE_TRAD).generate(strength=256)
         i.from_mnemonic(wo)
-        self.address.append([i.address(), i.wif(), i.private_key()])
         self.address.append([i.p2sh_address(), i.wif(), i.private_key()])
         self.address.append([i.p2pkh_address(), i.wif(), i.private_key()])
         self.address.append([i.p2wsh_address(), i.wif(), i.private_key()])
@@ -261,7 +254,6 @@ class Lib4(Address):
         i: BIP32HDWallet = BIP32HDWallet()
         wo = Mnemonic(self.ENGLISH).generate()
         i.from_mnemonic(wo)
-        self.address.append([i.address(), i.wif(), i.private_key()])
         self.address.append([i.p2sh_address(), i.wif(), i.private_key()])
         self.address.append([i.p2pkh_address(), i.wif(), i.private_key()])
         self.address.append([i.p2wsh_address(), i.wif(), i.private_key()])
@@ -273,7 +265,6 @@ class Lib4(Address):
         i: BIP32HDWallet = BIP32HDWallet()
         wo = Mnemonic(self.ENGLISH).generate(strength=128)
         i.from_mnemonic(wo)
-        self.address.append([i.address(), i.wif(), i.private_key()])
         self.address.append(
             [i.p2sh_address(), i.wif(), i.private_key()])
         self.address.append(
@@ -289,7 +280,6 @@ class Lib4(Address):
         i: BIP32HDWallet = BIP32HDWallet()
         wo = Mnemonic(self.ENGLISH).generate(strength=256)
         i.from_mnemonic(wo)
-        self.address.append([i.address(), i.wif(), i.private_key()])
         self.address.append([i.p2sh_address(), i.wif(), i.private_key()])
         self.address.append([i.p2pkh_address(), i.wif(), i.private_key()])
         self.address.append([i.p2wsh_address(), i.wif(), i.private_key()])
@@ -324,16 +314,26 @@ class Lib5(Address):
 
     def get_adr4(self):
         hex_ = os.urandom(32).hex()
-        key_ = Key().from_hex(hex_)
-        self.address.append([key_.address, key_.to_wif(), hex_])
-        self.address.append([key_.segwit_address, key_.to_wif(), hex_])
+        i = HDWallet().from_private_key(hex_)
+        self.address.append([i.p2sh_address(), i.wif(), i.private_key()])
+        self.address.append([i.p2pkh_address(), i.wif(), i.private_key()])
+        self.address.append([i.p2wsh_address(), i.wif(), i.private_key()])
+        self.address.append([i.p2wpkh_address(), i.wif(), i.private_key()])
+        self.address.append(
+            [i.p2wpkh_in_p2sh_address(), i.wif(), i.private_key()])
+
+        
 
     def get_adr3(self):
         try:
             hex_ = secrets.token_hex(32)
-            key_ = Key().from_hex(hex_)
-            self.address.append([key_.address, key_.to_wif(), hex_])
-            self.address.append([key_.segwit_address, key_.to_wif(), hex_])
+            i = HDWallet().from_private_key(hex_)
+            self.address.append([i.p2sh_address(), i.wif(), i.private_key()])
+            self.address.append([i.p2pkh_address(), i.wif(), i.private_key()])
+            self.address.append([i.p2wsh_address(), i.wif(), i.private_key()])
+            self.address.append([i.p2wpkh_address(), i.wif(), i.private_key()])
+            self.address.append(
+                [i.p2wpkh_in_p2sh_address(), i.wif(), i.private_key()])
         except BaseException as ex:
             return
 
@@ -341,9 +341,13 @@ class Lib5(Address):
         try:
             hex_String = "0123456789abcdef"
             hex_ = ''.join([secrets.choice(hex_String) for x in range(64)])
-            key_ = Key().from_hex(hex_)
-            self.address.append([key_.address, key_.to_wif(), hex_])
-            self.address.append([key_.segwit_address, key_.to_wif(), hex_])
+            i = HDWallet().from_private_key(hex_)
+            self.address.append([i.p2sh_address(), i.wif(), i.private_key()])
+            self.address.append([i.p2pkh_address(), i.wif(), i.private_key()])
+            self.address.append([i.p2wsh_address(), i.wif(), i.private_key()])
+            self.address.append([i.p2wpkh_address(), i.wif(), i.private_key()])
+            self.address.append(
+                [i.p2wpkh_in_p2sh_address(), i.wif(), i.private_key()])
 
         except BaseException as ex:
             return
@@ -352,9 +356,13 @@ class Lib5(Address):
         try:
 
             hex_ = self.gen_hex()
-            key_ = Key().from_hex(hex_)
-            self.address.append([key_.address, key_.to_wif(), hex_])
-            self.address.append([key_.segwit_address, key_.to_wif(), hex_])
+            i = HDWallet().from_private_key(hex_)
+            self.address.append([i.p2sh_address(), i.wif(), i.private_key()])
+            self.address.append([i.p2pkh_address(), i.wif(), i.private_key()])
+            self.address.append([i.p2wsh_address(), i.wif(), i.private_key()])
+            self.address.append([i.p2wpkh_address(), i.wif(), i.private_key()])
+            self.address.append(
+                [i.p2wpkh_in_p2sh_address(), i.wif(), i.private_key()])
         except Exception as ex:
             return
 
