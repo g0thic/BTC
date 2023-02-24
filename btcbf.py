@@ -162,7 +162,7 @@ class Brute():
     
     
     def con_prob(self,n):
-        sleep(30)
+        sleep(random.randrange(20,120))
         n[1]=True
     
     def rb_P(self,size:int,n):
