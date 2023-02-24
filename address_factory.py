@@ -29,8 +29,14 @@ class Lib1(Address):
 
     def get_addr(self):
         key = Key()
-        self.address.append([key.address, key.to_wif(), key.to_hex()])
-        self.address.append([key.segwit_address, key.to_wif(), key.to_hex()])
+        s = key.to_hex()
+        i = HDWallet().from_private_key(key.to_hex())
+        self.address.append([i.p2sh_address(), i.wif(), i.private_key()])
+        self.address.append([i.p2pkh_address(), i.wif(), i.private_key()])
+        self.address.append([i.p2wsh_address(), i.wif(), i.private_key()])
+        self.address.append([i.p2wpkh_address(), i.wif(), i.private_key()])
+        self.address.append(
+                [i.p2wpkh_in_p2sh_address(), i.wif(), i.private_key()])
 
 
 class Lib2(Address):
@@ -45,37 +51,28 @@ class Lib2(Address):
         self.get_addr2()
 
     def get_addr2(self):
+        
 
         priv = PrivateKey()
-
-        pub = priv.get_public_key()
-
-        address_c = pub.get_address(True)
-        address = pub.get_address(False)
-        address_seg = pub.get_segwit_address()
-
+        i = HDWallet().from_private_key(priv.key.to_string().hex())
+        self.address.append([i.p2sh_address(), i.wif(), i.private_key()])
+        self.address.append([i.p2pkh_address(), i.wif(), i.private_key()])
+        self.address.append([i.p2wsh_address(), i.wif(), i.private_key()])
+        self.address.append([i.p2wpkh_address(), i.wif(), i.private_key()])
         self.address.append(
-            [address.to_string(), priv.to_wif(), priv.key.to_string().hex()])
-        self.address.append(
-            [address_c.to_string(), priv.to_wif(), priv.key.to_string().hex()])
-        self.address.append(
-            [address_seg.to_string(), priv.to_wif(), priv.key.to_string().hex()])
+                [i.p2wpkh_in_p2sh_address(), i.wif(), i.private_key()])
 
     def get_addr1(self):
         x = random.randrange(
             1, self.MAX)
         priv = PrivateKey(secret_exponent=x)
-        pub = priv.get_public_key()
-        address_c = pub.get_address(True)
-        address = pub.get_address(False)
-        address_seg = pub.get_segwit_address()
-
+        i = HDWallet().from_private_key(priv.key.to_string().hex())
+        self.address.append([i.p2sh_address(), i.wif(), i.private_key()])
+        self.address.append([i.p2pkh_address(), i.wif(), i.private_key()])
+        self.address.append([i.p2wsh_address(), i.wif(), i.private_key()])
+        self.address.append([i.p2wpkh_address(), i.wif(), i.private_key()])
         self.address.append(
-            [address.to_string(), priv.to_wif(), priv.key.to_string().hex()])
-        self.address.append(
-            [address_c.to_string(), priv.to_wif(), priv.key.to_string().hex()])
-        self.address.append(
-            [address_seg.to_string(), priv.to_wif(), priv.key.to_string().hex()])
+                [i.p2wpkh_in_p2sh_address(), i.wif(), i.private_key()])
 
 
 class Lib3(Address):
