@@ -106,8 +106,8 @@ class Brute():
         return StaticMethods.connect(address)
 
     def connect_P(self, address, proxies):
-        response = StaticMethods.connect_P(address, proxies)
-        return response
+        return StaticMethods.connect_P(address, proxies)
+        
 
     def get_adr_list(self):
         aa = list()
