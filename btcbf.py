@@ -257,7 +257,7 @@ class brute_manager():
         try:
             
             for index in range(workers):
-                if self.shared_[0] is False or self.shared_[1] is False:
+                if self.shared_[0] is False:
                     break
                 tt = Multi_processing.Process(target=self.worker_function,args=(use_proxy,self.shared_,workers))
                 tt.start()
