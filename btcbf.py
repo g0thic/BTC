@@ -280,7 +280,7 @@ class brute_manager():
     def manage(self, total_workers:int, enable_proxy:bool):
         try:
             self.ProcessList = list()
-            self.shared_ =  Multi_processing.Manager().list()
+            self.shared_ = Multi_processing.Manager().list()
             self.shared_.append(True)
             self.shared_.append(True)
             self.start_worker(workers=total_workers,use_proxy=enable_proxy)
