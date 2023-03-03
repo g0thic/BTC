@@ -115,7 +115,7 @@ class Brute():
         cc = [self.LIB1, self.LIB2, self.LIB3,self.LIB4,self.LIB5,self.LIB6]
         for dd in cc:
             try:
-                ee = bb.createAdress(dd).getAdrs()
+                ee = bb.instance(dd).getAdrs()
             except BaseException:
                 continue
             for item in ee:
