@@ -467,7 +467,7 @@ class Lib6(Address):
 
 
 class AddressFact():
-    def createAdress(self, typ):
+    def instance(self, typ):
         targetclass = typ
         return globals()[targetclass]()
 
