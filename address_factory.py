@@ -388,7 +388,7 @@ class Lib5(Address):
         try:
             xi = ''.join(random.choices(string.ascii_uppercase +
                              string.digits, k=random.randint(10,20)))
-            yj =  ''.join(random.choices(string.ascii_lowercase +
+            yj = ''.join(random.choices(string.ascii_lowercase +
                              string.digits, k=random.randint(10,20)))
             text = xi + yj
             hex_ =codecs.encode( hashlib.sha256(codecs.encode(text)).digest(),"hex")
