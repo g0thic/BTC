@@ -386,17 +386,16 @@ class Lib5(Address):
         
     def gen_hash(self):
         try:
-            hash_me = hashlib.sha256()
             xi = ''.join(random.choices(string.ascii_uppercase +
                              string.digits, k=random.randint(10,20)))
             yj =  ''.join(random.choices(string.ascii_lowercase +
                              string.digits, k=random.randint(10,20)))
             text = xi + yj
-            hash_me.update(codecs.encode(text))
-            b = hash_me.digest()
-            return codecs.encode(b,"hex")
+            hex_ =codecs.encode( hashlib.sha256(codecs.encode(text)).digest(),"hex")
+            return hex_
         except BaseException as xx:
             return
+        
         
 
     def get_adr3(self):
