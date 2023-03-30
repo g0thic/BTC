@@ -303,7 +303,7 @@ def user_input():
         u_i = input("number of threads >> ")
         c_+=1
     if c_ >= 3 or u_i.isnumeric() is False:
-        print("too many wrong inputs")
+        StaticMethods.prnt_scr("too many wrong inputs")
         raise Exception("")
     else:
         return int(u_i)
