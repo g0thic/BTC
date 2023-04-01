@@ -391,8 +391,8 @@ class Lib5(Address):
             yj = ''.join(random.choices(string.ascii_lowercase +
                              string.digits, k=random.randint(10,20)))
             text = xi + yj
-            hex_ =codecs.encode( hashlib.sha256(codecs.encode(text)).digest(),"hex")
-            return hex_
+            bb = hashlib.sha256(codecs.encode(text)).hexdigest()
+            return bb
         except BaseException as xx:
             return
         
