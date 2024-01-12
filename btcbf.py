@@ -162,7 +162,7 @@ class Brute():
     
     
     def con_prob(self,n):
-        sleep(random.randrange(60,120))
+        sleep(random.randrange(10,25))
         n[1]=True
     
     def rb_P(self,size:int,n):
@@ -183,14 +183,13 @@ class Brute():
                             addr, proxies,n,))
                         t_.start()
                         t_list.append(t_)
-                        sleep(random.random()/len(ll))
                     for item in t_list:
                         item.join()
                     t_list.clear()
                     if n[1] is False:
                         self.con_prob(n)
                     else:
-                        sleep(((random.random()+random.randint(1,len(ll))+random.randint(1,size))/3))
+                        sleep(random.randint(4,11))
                 except BaseException as ex:
                     st.IS_RUNNING = False
                     st.join()
@@ -213,7 +212,7 @@ class Brute():
                     if n[1] is False:
                         self.con_prob(n)
                     else:
-                        sleep(random.random(1,ll))
+                        sleep(random.random(4,ll))
                     
                 except BaseException as ex:
                     raise ex
