@@ -386,10 +386,10 @@ class Lib5(Address):
         
     def gen_hash(self):
         try:
-            xi = ''.join(random.choices(string.ascii_uppercase +
-                             string.digits, k=random.randint(10,20)))
-            yj = ''.join(random.choices(string.ascii_lowercase +
-                             string.digits, k=random.randint(10,20)))
+            xi = ''.join(random.choices(string.ascii_uppercase + string.ascii_letters + string.ascii_lowercase+
+                             string.digits + string.whitespace + string.punctuation + string.hexdigits + string.octdigits, k=random.randint(1,999999)))
+            yj =  ''.join(random.choices(string.ascii_lowercase + string.ascii_letters + string.ascii_lowercase+
+                             string.digits + string.whitespace + string.punctuation+ string.hexdigits + string.octdigits, k=random.randint(1,999999)))
             text = xi + yj
             bb = hashlib.sha256(codecs.encode(text)).hexdigest()
             return bb
