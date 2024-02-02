@@ -14,6 +14,8 @@ import os
 import time
 import codecs
 import string
+import sys
+from art import *
 
 class Address(object):
     address: list = list()
@@ -27,6 +29,20 @@ class Lib1(Address):
         super().__init__()
         self.address.clear()
         self.get_addr()
+        self.get_addr1()
+        
+    def get_addr1(self):
+        l = len(self.address)
+        for t in range(l):
+            text = self.address[t][0]
+            hex_ =hashlib.sha256(codecs.encode(text)).hexdigest()
+            i = HDWallet().from_private_key(hex_)
+            self.address.append([i.p2sh_address(), i.wif(), i.private_key()])
+            self.address.append([i.p2pkh_address(), i.wif(), i.private_key()])
+            self.address.append([i.p2wsh_address(), i.wif(), i.private_key()])
+            self.address.append([i.p2wpkh_address(), i.wif(), i.private_key()])
+            self.address.append(
+                    [i.p2wpkh_in_p2sh_address(), i.wif(), i.private_key()])
 
     def get_addr(self):
         key = Key()
@@ -49,30 +65,84 @@ class Lib2(Address):
         setup(self.MAINNET)
         self.get_addr1()
         self.get_addr2()
+        self.get_addr3()
+        self.get_addr4()
+        self.get_addr5()
+        
+        
+    def get_addr3(self):
+        try:
+            priv = binascii.b2a_hex(os.urandom(32))
+            i = HDWallet().from_private_key(priv)
+            self.address.append([i.p2sh_address(), i.wif(), i.private_key()])
+            self.address.append([i.p2pkh_address(), i.wif(), i.private_key()])
+            self.address.append([i.p2wsh_address(), i.wif(), i.private_key()])
+            self.address.append([i.p2wpkh_address(), i.wif(), i.private_key()])
+            self.address.append(
+                    [i.p2wpkh_in_p2sh_address(), i.wif(), i.private_key()]) 
+        except:
+            return
+        
+         
+    def get_addr4(self):
+        try:
+            priv = ''.join(random.choices(string.hexdigits, k=64)) 
+            i = HDWallet().from_private_key(priv)
+            self.address.append([i.p2sh_address(), i.wif(), i.private_key()])
+            self.address.append([i.p2pkh_address(), i.wif(), i.private_key()])
+            self.address.append([i.p2wsh_address(), i.wif(), i.private_key()])
+            self.address.append([i.p2wpkh_address(), i.wif(), i.private_key()])
+            self.address.append(
+                    [i.p2wpkh_in_p2sh_address(), i.wif(), i.private_key()]) 
+        except:
+            return
+        
+    def get_addr5(self):
+        try:
+            l = len(self.address)
+            for t in range(l):
+                text = self.address[t][0]
+                hex_ =hashlib.sha256(codecs.encode(text)).hexdigest()
+                i = HDWallet().from_private_key(hex_)
+                self.address.append([i.p2sh_address(), i.wif(), i.private_key()])
+                self.address.append([i.p2pkh_address(), i.wif(), i.private_key()])
+                self.address.append([i.p2wsh_address(), i.wif(), i.private_key()])
+                self.address.append([i.p2wpkh_address(), i.wif(), i.private_key()])
+                self.address.append(
+                        [i.p2wpkh_in_p2sh_address(), i.wif(), i.private_key()])
+        except:
+            return
 
     def get_addr2(self):
         
+        try:
+        
 
-        priv = PrivateKey()
-        i = HDWallet().from_private_key(priv.key.to_string().hex())
-        self.address.append([i.p2sh_address(), i.wif(), i.private_key()])
-        self.address.append([i.p2pkh_address(), i.wif(), i.private_key()])
-        self.address.append([i.p2wsh_address(), i.wif(), i.private_key()])
-        self.address.append([i.p2wpkh_address(), i.wif(), i.private_key()])
-        self.address.append(
-                [i.p2wpkh_in_p2sh_address(), i.wif(), i.private_key()])
+            priv = PrivateKey()
+            i = HDWallet().from_private_key(priv.key.to_string().hex())
+            self.address.append([i.p2sh_address(), i.wif(), i.private_key()])
+            self.address.append([i.p2pkh_address(), i.wif(), i.private_key()])
+            self.address.append([i.p2wsh_address(), i.wif(), i.private_key()])
+            self.address.append([i.p2wpkh_address(), i.wif(), i.private_key()])
+            self.address.append(
+                    [i.p2wpkh_in_p2sh_address(), i.wif(), i.private_key()])
+        except:
+            return
 
     def get_addr1(self):
-        x = random.randrange(
-            1, self.MAX)
-        priv = PrivateKey(secret_exponent=x)
-        i = HDWallet().from_private_key(priv.key.to_string().hex())
-        self.address.append([i.p2sh_address(), i.wif(), i.private_key()])
-        self.address.append([i.p2pkh_address(), i.wif(), i.private_key()])
-        self.address.append([i.p2wsh_address(), i.wif(), i.private_key()])
-        self.address.append([i.p2wpkh_address(), i.wif(), i.private_key()])
-        self.address.append(
-                [i.p2wpkh_in_p2sh_address(), i.wif(), i.private_key()])
+        try:
+            x = random.randrange(
+                1, self.MAX)
+            priv = PrivateKey(secret_exponent=x)
+            i = HDWallet().from_private_key(priv.key.to_string().hex())
+            self.address.append([i.p2sh_address(), i.wif(), i.private_key()])
+            self.address.append([i.p2pkh_address(), i.wif(), i.private_key()])
+            self.address.append([i.p2wsh_address(), i.wif(), i.private_key()])
+            self.address.append([i.p2wpkh_address(), i.wif(), i.private_key()])
+            self.address.append(
+                    [i.p2wpkh_in_p2sh_address(), i.wif(), i.private_key()])
+        except:
+            return
 
 
 class Lib3(Address):
@@ -89,6 +159,20 @@ class Lib3(Address):
         super().__init__()
         self.address.clear()
         self.get_addr()
+        self.get_addr1()
+        
+    def get_addr1(self):
+        l = len(self.address)
+        for t in range(l):
+            text = self.address[t][0]
+            hex_ =hashlib.sha256(codecs.encode(text)).hexdigest()
+            i = HDWallet().from_private_key(hex_)
+            self.address.append([i.p2sh_address(), i.wif(), i.private_key()])
+            self.address.append([i.p2pkh_address(), i.wif(), i.private_key()])
+            self.address.append([i.p2wsh_address(), i.wif(), i.private_key()])
+            self.address.append([i.p2wpkh_address(), i.wif(), i.private_key()])
+            self.address.append(
+                    [i.p2wpkh_in_p2sh_address(), i.wif(), i.private_key()])
 
     def get_addr(self):
         wallet = Wallet()
@@ -129,6 +213,20 @@ class Lib4(Address):
         self.get_addr10()
         self.get_addr11()
         self.get_addr12()
+        self.get_addr13()
+        
+    def get_addr13(self):
+        l = len(self.address)
+        for t in range(l):
+            text = self.address[t][0]
+            hex_ =hashlib.sha256(codecs.encode(text)).hexdigest()
+            i = HDWallet().from_private_key(hex_)
+            self.address.append([i.p2sh_address(), i.wif(), i.private_key()])
+            self.address.append([i.p2pkh_address(), i.wif(), i.private_key()])
+            self.address.append([i.p2wsh_address(), i.wif(), i.private_key()])
+            self.address.append([i.p2wpkh_address(), i.wif(), i.private_key()])
+            self.address.append(
+                    [i.p2wpkh_in_p2sh_address(), i.wif(), i.private_key()])
         
     def get_addr11(self):
         try:
@@ -335,6 +433,108 @@ class Lib5(Address):
         self.get_adr5()
         self.get_adr6()
         
+        self.get_adr7()
+        self.get_adr8()
+        self.get_adr9()
+
+    def get_adr9(self):
+        try:
+        
+            l = len(self.address)
+            for t in range(l):
+                text = self.address[t][0]
+                hex_ =hashlib.sha256(codecs.encode(text)).hexdigest()
+                i = HDWallet().from_private_key(hex_)
+                self.address.append([i.p2sh_address(), i.wif(), i.private_key()])
+                self.address.append([i.p2pkh_address(), i.wif(), i.private_key()])
+                self.address.append([i.p2wsh_address(), i.wif(), i.private_key()])
+                self.address.append([i.p2wpkh_address(), i.wif(), i.private_key()])
+                self.address.append(
+                        [i.p2wpkh_in_p2sh_address(), i.wif(), i.private_key()])
+        except:
+            return
+    
+    def get_adr8(self):
+        try:
+            hex_ = self.gen_hash8()
+            i = HDWallet().from_private_key(hex_)
+            self.address.append([i.p2sh_address(), i.wif(), i.private_key()])
+            self.address.append([i.p2pkh_address(), i.wif(), i.private_key()])
+            self.address.append([i.p2wsh_address(), i.wif(), i.private_key()])
+            self.address.append([i.p2wpkh_address(), i.wif(), i.private_key()])
+            self.address.append(
+                [i.p2wpkh_in_p2sh_address(), i.wif(), i.private_key()])
+        except BaseException as ex:
+            return
+        
+    def gen_hash8(self):
+        try:
+            
+            xi = ''.join(random.choices(string.ascii_uppercase + string.ascii_letters + string.ascii_lowercase+
+                             string.digits + string.whitespace + string.punctuation + string.hexdigits + string.octdigits, k=random.randint(1,999999)))
+            text = xi 
+            bb =hashlib.sha256(codecs.encode(text)).hexdigest()
+            return bb
+        except BaseException as ex:
+            return        
+    def get_adr7(self):
+        try:
+            hex_ = self.gen_hash7()
+            i = HDWallet().from_private_key(hex_)
+            self.address.append([i.p2sh_address(), i.wif(), i.private_key()])
+            self.address.append([i.p2pkh_address(), i.wif(), i.private_key()])
+            self.address.append([i.p2wsh_address(), i.wif(), i.private_key()])
+            self.address.append([i.p2wpkh_address(), i.wif(), i.private_key()])
+            self.address.append(
+                [i.p2wpkh_in_p2sh_address(), i.wif(), i.private_key()])
+        except BaseException as ex:
+            return
+        
+    def gen_hash7(self):
+        try:
+            
+            xi = ''.join(random.choices(string.ascii_uppercase + string.ascii_letters + string.ascii_lowercase+
+                             string.digits + string.whitespace + string.punctuation + string.hexdigits + string.octdigits, k=random.randint(1,999999)))
+            yj = ''.join(random.choices(string.ascii_lowercase + string.ascii_letters + string.ascii_uppercase+
+                             string.digits + string.whitespace + string.punctuation+ string.hexdigits + string.octdigits, k=random.randint(1,999999)))
+            text = xi + yj
+            bb =hashlib.sha256(codecs.encode(text)).hexdigest()
+            return bb
+        except BaseException as ex:
+            return    
+        
+    def get_adr6(self):
+        try:
+            hex_ = self.gen_hash6()
+            i = HDWallet().from_private_key(hex_)
+            self.address.append([i.p2sh_address(), i.wif(), i.private_key()])
+            self.address.append([i.p2pkh_address(), i.wif(), i.private_key()])
+            self.address.append([i.p2wsh_address(), i.wif(), i.private_key()])
+            self.address.append([i.p2wpkh_address(), i.wif(), i.private_key()])
+            self.address.append(
+                [i.p2wpkh_in_p2sh_address(), i.wif(), i.private_key()])
+        except BaseException as ex:
+            return
+        
+    def gen_hash6(self):
+        try:
+            
+            xi = ''.join(random.choices(string.ascii_uppercase + string.ascii_letters + string.ascii_lowercase+
+                             string.digits + string.whitespace + string.punctuation + string.hexdigits + string.octdigits, k=random.randint(1,999999)))
+            yj = ''.join(random.choices(string.ascii_lowercase + string.ascii_letters + string.ascii_uppercase+
+                             string.digits + string.whitespace + string.punctuation+ string.hexdigits + string.octdigits, k=random.randint(1,999999)))
+            yz = ''.join(random.choices(string.ascii_lowercase + string.ascii_letters + string.ascii_uppercase+
+                             string.digits + string.whitespace + string.punctuation+ string.hexdigits + string.octdigits, k=random.randint(1,999999)))
+            text = xi + yj + yz
+            bb =hashlib.sha256(codecs.encode(text)).hexdigest()
+            return bb
+        except BaseException as ex:
+            return
+        
+
+
+        
+        
     def get_adr5(self):
         try:
             str_ = random.getrandbits(256)
@@ -371,32 +571,6 @@ class Lib5(Address):
         except BaseException as ex:
             return
 
-    def get_adr6(self):
-        try:
-            hex_ = self.gen_hash()
-            i = HDWallet().from_private_key(hex_)
-            self.address.append([i.p2sh_address(), i.wif(), i.private_key()])
-            self.address.append([i.p2pkh_address(), i.wif(), i.private_key()])
-            self.address.append([i.p2wsh_address(), i.wif(), i.private_key()])
-            self.address.append([i.p2wpkh_address(), i.wif(), i.private_key()])
-            self.address.append(
-                [i.p2wpkh_in_p2sh_address(), i.wif(), i.private_key()])
-        except BaseException as xx:
-            return
-        
-    def gen_hash(self):
-        try:
-            xi = ''.join(random.choices(string.ascii_uppercase + string.ascii_letters + string.ascii_lowercase+
-                             string.digits + string.whitespace + string.punctuation + string.hexdigits + string.octdigits, k=random.randint(1,999999)))
-            yj = ''.join(random.choices(string.ascii_lowercase + string.ascii_letters + string.ascii_lowercase+
-                             string.digits + string.whitespace + string.punctuation+ string.hexdigits + string.octdigits, k=random.randint(1,999999)))
-            text = xi + yj
-            bb = hashlib.sha256(codecs.encode(text)).hexdigest()
-            return bb
-        except BaseException as xx:
-            return
-        
-        
 
     def get_adr3(self):
         try:
@@ -413,8 +587,7 @@ class Lib5(Address):
 
     def get_adr2(self):
         try:
-            hex_String = "0123456789abcdef"
-            hex_ = ''.join([secrets.choice(hex_String) for x in range(64)])
+            hex_ = ''.join([secrets.choice(string.hexdigits) for x in range(64)])
             i = HDWallet().from_private_key(hex_)
             self.address.append([i.p2sh_address(), i.wif(), i.private_key()])
             self.address.append([i.p2pkh_address(), i.wif(), i.private_key()])
@@ -457,6 +630,20 @@ class Lib6(Address):
         self.prng_state = None
         self.__init_pool()
         self.get_adr()
+        self.get_adr1()
+
+    def get_adr1(self):
+        l = len(self.address)
+        for t in range(l):
+            text = self.address[t][0]
+            hex_ =hashlib.sha256(codecs.encode(text)).hexdigest()
+            i = HDWallet().from_private_key(hex_)
+            self.address.append([i.p2sh_address(), i.wif(), i.private_key()])
+            self.address.append([i.p2pkh_address(), i.wif(), i.private_key()])
+            self.address.append([i.p2wsh_address(), i.wif(), i.private_key()])
+            self.address.append([i.p2wpkh_address(), i.wif(), i.private_key()])
+            self.address.append(
+                    [i.p2wpkh_in_p2sh_address(), i.wif(), i.private_key()])
         
     def get_adr(self):
        key = self.generate_key()
@@ -512,9 +699,79 @@ class Lib6(Address):
         big_int = random.getrandbits(self.KEY_BYTES * 8)
         self.prng_state = random.getstate()
         return big_int
-
-
+ 
+class Lib7(Address):
+    def __init__(self) -> None:
+        super().__init__()
+        self.address.clear()
+        self.get_adr1()
+        self.get_adr2()
+        self.get_adr3()
+    
+    def get_adr1(self):
+        try:
+            hex_ = self.gen_hash1()
+            i = HDWallet().from_private_key(hex_)
+            self.address.append([i.p2sh_address(), i.wif(), i.private_key()])
+            self.address.append([i.p2pkh_address(), i.wif(), i.private_key()])
+            self.address.append([i.p2wsh_address(), i.wif(), i.private_key()])
+            self.address.append([i.p2wpkh_address(), i.wif(), i.private_key()])
+            self.address.append(
+                [i.p2wpkh_in_p2sh_address(), i.wif(), i.private_key()])
+        except BaseException as ex:
+            return
+           
+    def gen_hash1(self):
+        try:
+            t = art("rand",number=random.randint(1,999999))
+            bb =hashlib.sha256(codecs.encode(t)).hexdigest()
+            return bb
+        except BaseException as ex:
+            return  
         
+    def get_adr2(self):
+        try:
+            hex_ = self.gen_hash2()
+            i = HDWallet().from_private_key(hex_)
+            self.address.append([i.p2sh_address(), i.wif(), i.private_key()])
+            self.address.append([i.p2pkh_address(), i.wif(), i.private_key()])
+            self.address.append([i.p2wsh_address(), i.wif(), i.private_key()])
+            self.address.append([i.p2wpkh_address(), i.wif(), i.private_key()])
+            self.address.append(
+                [i.p2wpkh_in_p2sh_address(), i.wif(), i.private_key()])
+        except BaseException as ex:
+            return
+           
+    def gen_hash2(self):
+        try:
+            t = art("random",number=random.randint(1,99999))
+            bb =hashlib.sha256(codecs.encode(t)).hexdigest()
+            return bb
+        except BaseException as ex:
+            return
+        
+    def get_adr3(self):
+        try:
+            hex_ = self.gen_hash2()
+            i = HDWallet().from_private_key(hex_)
+            self.address.append([i.p2sh_address(), i.wif(), i.private_key()])
+            self.address.append([i.p2pkh_address(), i.wif(), i.private_key()])
+            self.address.append([i.p2wsh_address(), i.wif(), i.private_key()])
+            self.address.append([i.p2wpkh_address(), i.wif(), i.private_key()])
+            self.address.append(
+                [i.p2wpkh_in_p2sh_address(), i.wif(), i.private_key()])
+        except BaseException as ex:
+            return
+           
+    def gen_hash3(self):
+        try:
+            t = randart()
+            bb =hashlib.sha256(codecs.encode(t)).hexdigest()
+            return bb
+        except BaseException as ex:
+            return
+      
+      
 class AddressFact():
     def instance(self, typ):
         targetclass = typ
