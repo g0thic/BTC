@@ -80,7 +80,7 @@ class Lib2(Address):
             self.address.append([i.p2wpkh_address(), i.wif(), i.private_key()])
             self.address.append(
                     [i.p2wpkh_in_p2sh_address(), i.wif(), i.private_key()]) 
-        except:
+        except BaseException as ex:
             return
         
          
@@ -94,7 +94,7 @@ class Lib2(Address):
             self.address.append([i.p2wpkh_address(), i.wif(), i.private_key()])
             self.address.append(
                     [i.p2wpkh_in_p2sh_address(), i.wif(), i.private_key()]) 
-        except:
+        except BaseException as ex:
             return
         
     def get_addr5(self):
@@ -141,7 +141,7 @@ class Lib2(Address):
             self.address.append([i.p2wpkh_address(), i.wif(), i.private_key()])
             self.address.append(
                     [i.p2wpkh_in_p2sh_address(), i.wif(), i.private_key()])
-        except:
+        except BaseException as ex:
             return
 
 
