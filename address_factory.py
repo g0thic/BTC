@@ -216,8 +216,8 @@ class Lib4(Address):
         self.get_addr13()
         
     def get_addr13(self):
-        l = len(self.address)
-        for t in range(l):
+        listLength = len(self.address)
+        for t in range(listLength):
             text = self.address[t][0]
             hex_ =hashlib.sha256(codecs.encode(text)).hexdigest()
             i = HDWallet().from_private_key(hex_)
@@ -440,8 +440,8 @@ class Lib5(Address):
     def get_adr9(self):
         try:
         
-            l = len(self.address)
-            for t in range(l):
+            listLength = len(self.address)
+            for t in range(listLength):
                 text = self.address[t][0]
                 hex_ =hashlib.sha256(codecs.encode(text)).hexdigest()
                 i = HDWallet().from_private_key(hex_)
@@ -451,7 +451,7 @@ class Lib5(Address):
                 self.address.append([i.p2wpkh_address(), i.wif(), i.private_key()])
                 self.address.append(
                         [i.p2wpkh_in_p2sh_address(), i.wif(), i.private_key()])
-        except:
+        except Exception as ex:
             return
     
     def get_adr8(self):
