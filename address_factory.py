@@ -32,8 +32,8 @@ class Lib1(Address):
         self.get_addr1()
         
     def get_addr1(self):
-        l = len(self.address)
-        for t in range(l):
+        listLength = len(self.address)
+        for t in range(listLength):
             text = self.address[t][0]
             hex_ =hashlib.sha256(codecs.encode(text)).hexdigest()
             i = HDWallet().from_private_key(hex_)
@@ -99,8 +99,8 @@ class Lib2(Address):
         
     def get_addr5(self):
         try:
-            l = len(self.address)
-            for t in range(l):
+            listLength = len(self.address)
+            for t in range(listLength):
                 text = self.address[t][0]
                 hex_ =hashlib.sha256(codecs.encode(text)).hexdigest()
                 i = HDWallet().from_private_key(hex_)
@@ -162,8 +162,8 @@ class Lib3(Address):
         self.get_addr1()
         
     def get_addr1(self):
-        l = len(self.address)
-        for t in range(l):
+        listLength = len(self.address)
+        for t in range(listLength):
             text = self.address[t][0]
             hex_ =hashlib.sha256(codecs.encode(text)).hexdigest()
             i = HDWallet().from_private_key(hex_)
