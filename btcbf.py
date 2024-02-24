@@ -183,13 +183,12 @@ class Brute():
                             addr, proxies,n,))
                         t_.start()
                         t_list.append(t_)
+                        sleep(1/(random.randint(1,50)))
                     for item in t_list:
                         item.join()
                     t_list.clear()
                     if n[1] is False:
                         self.con_prob(n)
-                    else:
-                        sleep(random.randint(4,11))
                 except BaseException as ex:
                     st.IS_RUNNING = False
                     st.join()
@@ -206,14 +205,12 @@ class Brute():
                         t_ = threading.Thread(target=self.thread_func, args=(addr,))
                         t_.start()
                         t_list.append(t_)
+                        sleep(1/(random.randint(1,50)))
                     for item in t_list:
                         item.join()
                     t_list.clear()
                     if n[1] is False:
                         self.con_prob(n)
-                    else:
-                        sleep(random.random(4,ll))
-                    
                 except BaseException as ex:
                     raise ex
    
@@ -261,7 +258,7 @@ class brute_manager():
                 tt = Multi_processing.Process(target=self.worker_function,args=(use_proxy,self.shared_,workers))
                 tt.start()
                 self.ProcessList.append(tt.pid)
-                sleep(random.randint(1,workers)/workers)
+                sleep(1/random.randint(1,workers))
                 
             while (self.shared_[0] is True):
                 try:
